@@ -11,22 +11,22 @@ import numpy as np
 def spanwise_discretisation(Method, R_Root_Ratio, span_points):
 
     if Method == 'Equal':
-        r = np.linspace(R_Root_Ratio, 1, span_points)
+        r_segment = np.linspace(R_Root_Ratio, 1, span_points)
 
     elif Method == 'Cosine':
        middle_point = (1 - R_Root_Ratio) / 2
-       r = np.zeros(span_points)
-       r[0] = R_Root_Ratio
-       r[-1] = 1
+       r_segment = np.zeros(span_points)
+       r_segment[0] = R_Root_Ratio
+       r_segment[-1] = 1
 
        angle_ratio = np.pi / (span_points - 1)  # Calculate the ratio of current iteration
        angle = angle_ratio
 
        for i in range(1, span_points):
-           r[i] = R_Root_Ratio + middle_point * (1 - np.cos(angle))
+           r_segment[i] = R_Root_Ratio + middle_point * (1 - np.cos(angle))
            angle += angle_ratio
 
-    return r
+    return r_segment
 
 #r = spanwise_discretisation(Method='Cosine', R_Root_Ratio=0.2, span_points=10)
 #print(r)
@@ -43,6 +43,11 @@ def blade_discretization(n_blades, spanpoints):
     panels = np.zeros((n_blades * (span_points - 1), 4 * 3))
 
     for blade in range(n_blades):
+        r = (span_array[i] + span_array[i + 1]) / 2
+        geodef = geo_blade(r / radius)
+        angle = geodef[1] * math.pi / 180
+
+
         geodef = geo_blade(span_array[i] / radius)
         angle = geodef[1] * math.pi / 180
         geodef2 = geo_blade(span_array[i + 1] / radius)
@@ -54,3 +59,7 @@ def blade_discretization(n_blades, spanpoints):
         p3 = [0.75 * chord2 * np.sin(-angle2), self.span_arr[1:], -0.75 * chord2 * np.cos(angle2)]
         p4 = [0.75 * chord1 * np.sin(-angle1), self.span_arr[:-1], -0.75 * chord1 * np.cos(angle1)]
 
+
+
+
+    return panels
