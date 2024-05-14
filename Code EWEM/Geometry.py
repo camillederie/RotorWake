@@ -26,7 +26,12 @@ def spanwise_discretisation(Method, R_Root_Ratio, span_points):
            r_segment[i] = R_Root_Ratio + middle_point * (1 - np.cos(angle))
            angle += angle_ratio
 
-    return r_segment
+
+    span_array = r_segment
+
+    return span_array
+
+
 
 #r = spanwise_discretisation(Method='Cosine', R_Root_Ratio=0.2, span_points=10)
 #print(r)
@@ -42,7 +47,15 @@ def blade_discretization(n_blades, spanpoints):
 
     panels = np.zeros((n_blades * (span_points - 1), 4 * 3))
 
-    for blade in range(n_blades):
+    for k in range(n_blades):
+        angle_rotation = 2 * np.pi / n_blades * k
+
+
+
+
+
+
+
         r = (span_array[i] + span_array[i + 1]) / 2
         geodef = geo_blade(r / radius)
         angle = geodef[1] * math.pi / 180
