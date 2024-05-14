@@ -28,6 +28,8 @@ def spanwise_discretisation(Method, R_Root_Ratio, span_points):
 
     return r
 
+#r = spanwise_discretisation(Method='Cosine', R_Root_Ratio=0.2, span_points=10)
+#print(r)
 
 def geo_blade(r_R):
     pitch = 2
@@ -46,4 +48,9 @@ def blade_discretization(n_blades, spanpoints):
         geodef2 = geo_blade(span_array[i + 1] / radius)
         angle2 = geodef2[1] * math.pi / 180
 
+        # define the 4 corners
+        p1 = [-0.25 * chord1 * np.sin(-angle1), self.span_arr[:-1], 0.25 * chord1 * np.cos(angle1)]
+        p2 = [-0.25 * chord2 * np.sin(-angle2), self.span_arr[1:], 0.25 * chord2 * np.cos(angle2)]
+        p3 = [0.75 * chord2 * np.sin(-angle2), self.span_arr[1:], -0.75 * chord2 * np.cos(angle2)]
+        p4 = [0.75 * chord1 * np.sin(-angle1), self.span_arr[:-1], -0.75 * chord1 * np.cos(angle1)]
 
