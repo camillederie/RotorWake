@@ -106,7 +106,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
             filaments.append(temp1)
             # Trailing filament 1
             geodef = geo_blade(span_array[i] / R)
-            angle = np.deg2rad(angle)
+            angle = geodef[1] * m.pi / 180
             temp1 = {
                 'x1': geodef[0] * m.sin(-angle),
                 'y1': span_array[i],
