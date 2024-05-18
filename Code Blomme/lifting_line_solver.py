@@ -3,8 +3,8 @@ Runs frozen vortex wake solver // lifting line theory
 """
 
 import numpy as np
-from scipy.interpolate import interp1d
 from create_geometry import BladeGeometry
+from scipy.interpolate import interp1d
 
 
 class LiftingLineSolver:
@@ -83,7 +83,7 @@ class LiftingLineSolver:
 
     def _compute_induced_velocity(self):
         # create u, v, w matrix to store induced velocities. The matrix consists of elements in which the rows
-        # represent the control points and columns the net effect of a single "ring".
+        # represent the control points and columns the net effect of a single "ring". 
         uvw_mat = np.zeros((3, self.geo.cp.shape[0], self.geo.filaments.shape[1]))  # three square matrices
         core = 0.00001  # no idea what this is
         for i, cp_i in enumerate(self.geo.cp[:, :3]):  # only loop over the coordinates of the control points

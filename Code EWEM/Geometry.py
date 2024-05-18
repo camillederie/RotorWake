@@ -1,5 +1,6 @@
-import numpy as np
 import math as m
+
+import numpy as np
 from Variables import *
 
 #Discretisation of blade, vortex rings and control points
@@ -101,7 +102,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'x2': 0,
                 'y2': span_array[i + 1],
                 'z2': 0,
-                'Gamma': 0
+                'Gamma': 1
             }
             filaments.append(temp1)
             # Trailing filament 1
@@ -114,7 +115,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'x2': 0,
                 'y2': span_array[i],
                 'z2': 0,
-                'Gamma': 0
+                'Gamma': 1
             }
             filaments.append(temp1)
 
@@ -133,7 +134,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                     'x2': xt,
                     'y2': yt,
                     'z2': zt,
-                    'Gamma': 0
+                    'Gamma': 1
                 }
                 filaments.append(temp1)
             #Trailing filament 2
@@ -146,7 +147,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'x2': geodef[0] * m.sin(-angle),
                 'y2': span_array[i + 1],
                 'z2': -geodef[0] * m.cos(angle),
-                'Gamma': 0
+                'Gamma': 1
             }
             filaments.append(temp1)
 
@@ -165,7 +166,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                     'x2': xt + dx,
                     'y2': yt + dy,
                     'z2': zt + dz,
-                    'Gamma': 0
+                    'Gamma': 1
                 }
                 filaments.append(temp1)
 

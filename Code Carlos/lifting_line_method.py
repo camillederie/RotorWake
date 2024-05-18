@@ -341,7 +341,7 @@ def solve_lifting_line_system_matrix_approach(rotor_wake_system, wind, Omega, ro
             break
 
         for ig in range(len(GammaNew)):
-            GammaNew[ig] = (1 - ConvWeight) * Gamma[ig] + ConvWeight * GammaNew[ig]
+            GammaNew[ig] = (1 - ConvWeight) * Gamma[ig] + ConvWeight * GammaNew[ig] 
 
     return {
         'a': a_temp,

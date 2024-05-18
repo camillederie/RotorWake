@@ -1,12 +1,13 @@
 import matplotlib.pyplot as plt
+from Main import system_geom
 from Variables import *
-from Main import rotor_wake_system
+
 
 def plot_blade_geometry():
 # Extract control points, vortex rings, and blade panels from rotor_wake_system
-    controlpoints = rotor_wake_system['controlpoints']
-    rings = rotor_wake_system['rings']
-    bladepanels = rotor_wake_system['bladepanels']
+    controlpoints = system_geom['controlpoints']
+    rings = system_geom['rings']
+    bladepanels = system_geom['bladepanels']
 
     # Create a 3D plot
     fig = plt.figure()
