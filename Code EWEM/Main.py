@@ -21,6 +21,8 @@ system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_bl
 np.savetxt('system_geom.txt', np.array(list(system_geom.items())), fmt='%s')
 
 #Run the lifting line solver
-LiftingLineSolver(system_geom, v_inf, Omega, R)
+results = calculate_results(system_geom, v_inf, Omega, R)
+print('results =',results[1:])
+#LiftingLineSolver(system_geom, v_inf, Omega, R)
 
 

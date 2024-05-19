@@ -1,6 +1,8 @@
 #3D induced velocities, blade loads, run solver
 import numpy as np
-from BEM import calculate_BEM
+from BEM_for_LLM import calculate_BEM
+from Geometry import geo_blade
+from Variables import *
 
 
 def LiftingLineSolver(system_geom, V_inf, Omega, R):
@@ -66,6 +68,13 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     
     F_norm_list = np.zeros(len(control_points))
     F_tan_list = np.zeros(len(control_points))
+    alpha_list = np.zeros(len(control_points))
+    phi_list = np.zeros(len(control_points))
+    r_R_list = np.zeros(len(control_points))
+    pos_radial_list = np.zeros(len(control_points))
+    a_list = np.zeros(len(control_points))
+    a_line_list = np.zeros(len(control_points))
+
 
     for iter in range(n_iterations):
         gamma = gamma_updated.copy()
@@ -95,7 +104,12 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             F_norm_list[i] = BEM[0]
             F_tan_list[i] = BEM[1]
             gamma_updated[i] = BEM[2]
-
+            alpha_list[i] = BEM[3]
+            phi_list[i] = BEM[4]
+            r_R_list[i] = pos_radial / R
+            a_list[i] = -(u + v_rotational[0]) / V_inf
+            a_line_list[i] = v_azim / (Omega * pos_radial) - 1
+            pos_radial_list[i] = pos_radial
 
      
 
@@ -106,10 +120,41 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
         for i in range(len(control_points)):
             gamma_updated[i] = relax * gamma_updated[i] + (1 - relax) * gamma[i]
 
-    return F_norm_list, F_tan_list, gamma_updated
+    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list]
 
 
+def calculate_results(system_geom, V_inf, Omega, R):
+    # Calculate the results on the blade elements
+    # system_geom: Contains the geometry of horseshoe vortex rings and control points at the blade
+    # V_inf: Freestream velocity
+    # Omega: Rotational speed
+    # R: Rotor radius
 
+    # Calculate the results on the blade elements
+    results = LiftingLineSolver(system_geom, V_inf, Omega, R)
+    number_of_cp_per_blade = int(len(system_geom['controlpoints'])/ n_blades) # Number of control points per blade
+    print('number of cp per blade =',number_of_cp_per_blade)
+
+    indeces_b1 = np.arange(0, number_of_cp_per_blade)
+    indeces_b2 = np.arange(number_of_cp_per_blade, 2*number_of_cp_per_blade)
+    indeces_b3 = np.arange(2*number_of_cp_per_blade, 3*number_of_cp_per_blade)
+    print('indeces_b1 =',indeces_b1)
+    # Calculate the total results on the blade
+    T_B1 = np.trapz(results[0][indeces_b1], results[5][indeces_b1]) * n_blades
+    T_B2 = np.trapz(results[0][indeces_b2], results[5][indeces_b2]) * n_blades
+    T_B3 = np.trapz(results[0][indeces_b3], results[5][indeces_b3]) * n_blades
+    T = T_B1 + T_B2 + T_B3
+    P_B1 = np.trapz(results[1][indeces_b1] * results[5][indeces_b1], results[5][indeces_b1]) * Omega * n_blades
+    P_B2 = np.trapz(results[1][indeces_b2] * results[5][indeces_b2], results[5][indeces_b2]) * Omega * n_blades
+    P_B3 = np.trapz(results[1][indeces_b3] * results[5][indeces_b3], results[5][indeces_b3]) * Omega * n_blades
+    P = P_B1 + P_B2 + P_B3
+
+    # Calculate the power and thrust coefficients
+    Cp = P / (0.5 * rho * V_inf**3 * np.pi * R**2)
+    Ct = T / (0.5 * rho * V_inf**2 * np.pi * R**2)
+   
+
+    return [results, T, P, Cp, Ct]
 
 
 
