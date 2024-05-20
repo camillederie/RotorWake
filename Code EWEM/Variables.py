@@ -8,8 +8,8 @@ v_inf = 10.0
 
 n_span = 20
 n_blades = 3
-n_rotations = 2
+n_rotations = 1
 n_theta = 200
-Omega = 2 * m.pi * TSR * v_inf / R
+Omega = 2 * m.pi * TSR * v_inf / R # Rotational speed in rad/s
 rho = 1.225
 Method = "Cosine"

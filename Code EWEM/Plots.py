@@ -1,9 +1,9 @@
 import matplotlib.pyplot as plt
-from Main import system_geom
+#from Main import system_geom
 from Variables import *
 
 
-def plot_blade_geometry():
+def plot_blade_geometry(system_geom):
 # Extract control points, vortex rings, and blade panels from rotor_wake_system
     controlpoints = system_geom['controlpoints']
     rings = system_geom['rings']
@@ -48,7 +48,48 @@ def plot_blade_geometry():
     ax.set_ylabel('Y')
     ax.set_zlabel('Z')
     ax.set_title('Blade Geometry')
+    plt.show()
 
 #Run the plot functions
-plot_blade_geometry()
-plt.show()
+
+#plt.show()
+
+def plot_results(results, indeces_b1, indeces_b2, indeces_b3):
+    
+    # plot gamma vs radial position
+    plt.figure(figsize=(10, 5))
+    plt.plot(results[6][indeces_b1], results[2][indeces_b1], label='Blade 1')
+    plt.plot(results[6][indeces_b2], results[2][indeces_b2], label='Blade 2')
+    plt.plot(results[6][indeces_b3], results[2][indeces_b3], label='Blade 3')
+    plt.title('Gamma vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Gamma')
+    plt.legend()
+    plt.grid()
+    plt.show()
+    # plot alpha vs radial position and phi vs radial position
+
+    fig, ax = plt.subplots(2, 1, figsize=(10, 10))
+    ax[0].plot(results[6][indeces_b1], results[3][indeces_b1], label= 'Blade 1')
+    ax[0].plot(results[6][indeces_b2], results[3][indeces_b2], label= 'Blade 2')
+    ax[0].plot(results[6][indeces_b3], results[3][indeces_b3], label= 'Blade 3')
+
+    ax[0].set_title('Alpha vs radial position') 
+    ax[0].set_xlabel('Radial position')
+    ax[0].set_ylabel('Alpha')
+    ax[0].legend()
+    ax[0].grid()
+
+    ax[1].plot(results[6][indeces_b1], results[4][indeces_b1], label= 'Blade 1')
+    ax[1].plot(results[6][indeces_b2], results[4][indeces_b2], label= 'Blade 2')
+    ax[1].plot(results[6][indeces_b3], results[4][indeces_b3], label= 'Blade 3')
+    ax[1].set_title('Phi vs radial position')
+    ax[1].set_xlabel('Radial position')
+    ax[1].set_ylabel('Phi')
+    ax[1].legend()
+    ax[1].grid()
+
+    plt.show()
+
+
+

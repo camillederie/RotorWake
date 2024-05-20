@@ -1,3 +1,5 @@
+import math as m
+
 import numpy as np
 import pandas as pd
 from Geometry import geo_blade
@@ -21,9 +23,10 @@ def force_coeffs(localalpha,aoa_tab,cl_tab,cd_tab,cm_tab):
 def calculate_BEM(v_azim, v_axial,Omega, r_R):
     # Calculate the azimuthal and axial induction factors
     V_mag = np.sqrt(v_azim**2 + v_axial**2)
-    phi = np.arctan(v_azim / v_axial)
-
-    alpha = geo_blade(r_R)[1] + phi #  pitch + twist + inflow angle
+    phi = np.arctan(v_axial / v_azim)
+    phi_deg = m.degrees(phi)
+    alpha = phi_deg + geo_blade(r_R)[1] #+ phi #  pitch + twist + inflow angle
+    
     chord = geo_blade(r_R)[0]
     Cl, Cd, Cm = force_coeffs(alpha,aoa_tab,cl_tab,cd_tab,cm_tab)
     # Calculate the normal and tangential forces
@@ -34,4 +37,4 @@ def calculate_BEM(v_azim, v_axial,Omega, r_R):
     Gamma = 0.5 * V_mag * chord * Cl
     
     
-    return [Fnorm, Ftan, Gamma, alpha, phi]
+    return [Fnorm, Ftan, Gamma, alpha, phi_deg]
