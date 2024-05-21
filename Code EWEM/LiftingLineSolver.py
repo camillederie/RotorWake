@@ -1,4 +1,6 @@
 #3D induced velocities, blade loads, run solver
+import math
+
 import matplotlib.pyplot as plt
 import numpy as np
 from BEM_for_LLM import calculate_BEM
@@ -39,28 +41,31 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
         for r in rings: 
             v_ind = np.zeros(3)
             for f in r['filaments']:
-                gamma = f['Gamma']
-                x1, y1, z1 = f['x1'],f['y1'],f['z1']	# Start point of filament
-                x2, y2, z2 = f['x2'],f['y2'],f['z2']
-                xP, yP, zP = control_points[i]['coordinates'][0], control_points[i]['coordinates'][1], control_points[i]['coordinates'][2]
-                r1 = np.sqrt((xP - x1)**2 + (yP - y1)**2 + (zP - z1)**2)
-                r2 = np.sqrt((xP - x2)**2 + (yP - y2)**2 + (zP - z2)**2)
-                r1xr2_x = (yP - y1) * (zP - z2) - (zP - z1) * (yP - y2)
-                r1xr2_y = -(xP - x1) * (zP - z2) + (zP - z1) * (xP - x2)
-                r1xr2_z = (xP - x1) * (yP - y2) - (yP - y1) * (xP - x2)
-                r1xr_sqr = r1xr2_x**2 + r1xr2_y**2 + r1xr2_z**2
-                if r1xr_sqr < 0.0001:
-                    r1xr_sqr = 0.0001
-                if r1 < 0.0001:
-                    r1 = 0.0001
-                if r2 < 0.0001:
-                    r2 = 0.0001
-                r0r1 = (x2 - x1) * (xP - x1) + (y2 - y1) * (yP - y1) + (z2 - z1) * (zP - z1)
-                r0r2 = (x2 - x1) * (xP - x2) + (y2 - y1) * (yP - y2) + (z2 - z1) * (zP - z2)
-                k = gamma / (4 * np.pi * r1xr_sqr) * (r0r1 / r1 - r0r2 / r2)
-                v_ind[0] += k * r1xr2_x
-                v_ind[1] += k * r1xr2_y
-                v_ind[2] += k * r1xr2_z
+                GAMMA = f['Gamma']
+                X1, Y1, Z1 = f['x1'],f['y1'],f['z1']	# Start point of filament
+                X2, Y2, Z2 = f['x2'],f['y2'],f['z2']
+                XP, YP, ZP = control_points[i]['coordinates'][0], control_points[i]['coordinates'][1], control_points[i]['coordinates'][2]
+                R1 = math.sqrt((XP - X1) ** 2 + (YP - Y1) ** 2 + (ZP - Z1) ** 2)
+                R2 = math.sqrt((XP - X2) ** 2 + (YP - Y2) ** 2 + (ZP - Z2) ** 2)
+                R1XR2_X = (YP - Y1) * (ZP - Z2) - (ZP - Z1) * (YP - Y2)
+                R1XR2_Y = -(XP - X1) * (ZP - Z2) + (ZP - Z1) * (XP - X2)
+                R1XR2_Z = (XP - X1) * (YP - Y2) - (YP - Y1) * (XP - X2)
+                R1XR_SQR = R1XR2_X ** 2 + R1XR2_Y ** 2 + R1XR2_Z ** 2
+
+                if R1XR_SQR < 0.0001:
+                    R1XR_SQR = 0.0001
+                if R1 < 0.0001:
+                    R1 = 0.0001
+                if R2 < 0.0001:
+                    R2 = 0.0001
+
+                R0R1 = (X2 - X1) * (XP - X1) + (Y2 - Y1) * (YP - Y1) + (Z2 - Z1) * (ZP - Z1)
+                R0R2 = (X2 - X1) * (XP - X2) + (Y2 - Y1) * (YP - Y2) + (Z2 - Z1) * (ZP - Z2)
+
+                K = GAMMA / (4 * math.pi * R1XR_SQR) * (R0R1 / R1 - R0R2 / R2)
+                v_ind[0] += K * R1XR2_X
+                v_ind[1] += K * R1XR2_Y
+                v_ind[2] += K * R1XR2_Z
             matrix_u[i].append(v_ind[0])
             matrix_v[i].append(v_ind[1])
             matrix_w[i].append(v_ind[2])
