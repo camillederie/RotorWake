@@ -192,6 +192,7 @@ class BladeGeometry:
             cp_iblade = np.column_stack((boundEdge, tangVect, normVect))
             # return [coord, norm, tang] x,y,z
             cp[blade * (self.n_span - 1):blade * (self.n_span - 1) + self.n_span - 1, :] = cp_iblade
+        print(cp)
         return cp
 
     def doubleRotor(self):

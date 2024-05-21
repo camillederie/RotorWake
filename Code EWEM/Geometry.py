@@ -75,6 +75,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'normal': [m.cos(angle), 0, -m.sin(angle)],
                 'tangential': [-m.sin(angle), 0, -m.cos(angle)]
             }
+
             temp1['coordinates'] = [
                 0,
                 temp1['coordinates'][1] * cosrot - temp1['coordinates'][2] * sinrot,
@@ -92,6 +93,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
             ]
 
             controlpoints.append(temp1)
+            # print(controlpoints)
 
             # Create vortex rings
             # Bound filaments

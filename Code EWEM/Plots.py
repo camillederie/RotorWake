@@ -88,8 +88,20 @@ def plot_results(results, indeces_b1, indeces_b2, indeces_b3):
     ax[1].set_ylabel('Phi')
     ax[1].legend()
     ax[1].grid()
-
     plt.show()
+
+    plt.figure(figsize=(10, 5))
+    #Plot induction factor vs radial position
+    plt.plot(results[6][indeces_b1], results[7][indeces_b1], label='Blade 1')
+    plt.plot(results[6][indeces_b2], results[7][indeces_b2], label='Blade 2')
+    plt.plot(results[6][indeces_b3], results[7][indeces_b3], label='Blade 3')
+    plt.title('Induction factor vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Induction factor')
+    plt.legend()
+    plt.grid()
+    plt.show()
+    
 
 
 
