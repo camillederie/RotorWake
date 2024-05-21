@@ -15,18 +15,14 @@ from Variables import *
 #Run the functions
 span_array, theta_array = spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations)
 system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades)
-<<<<<<< Updated upstream
-plot_blade_geometry(system_geom)
 
-=======
 #plot_blade_geometry(system_geom)
->>>>>>> Stashed changes
 #write code to save the system_geom dictionary to a .txt file
 # np.savetxt('system_geom.txt', np.array(list(system_geom.items())), fmt='%s')
 
 #Run the lifting line solver
-# results = calculate_results(system_geom, v_inf, Omega, R)
-# print('CP, CT = ' ,results[3], results[4])
-# plot_results(results[0], results[-3],results[-2],results[-1])   
+results = calculate_results(system_geom, v_inf, Omega, R)
+print('CP, CT = ' ,results[3], results[4])
+plot_results(results[0], results[-3],results[-2],results[-1])   
 
 
