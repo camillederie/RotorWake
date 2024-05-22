@@ -80,6 +80,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     pos_radial_list = np.zeros(len(control_points))
     a_list = np.zeros(len(control_points))
     a_line_list = np.zeros(len(control_points))
+    gamma_nondim = np.ones(len(control_points))
     error_list = []
     iter_list = []
 
@@ -104,21 +105,20 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             #print('v_rotational =',v_rotational)
             v_inflow = np.array([V_inf, 0, 0]) # Assume no  yaw in the inflow so only x - direcion is considered	
             v_total = v_inflow + v_rotational + np.array([u, v, w])
-            
-            #print('v_total =',v_total)
+        
             # For BEM, the azimuthal and axial velocities are needed:
             azimuth = np.cross([-1/pos_radial, 0, 0], np.array(control_points[i]['coordinates']))
             v_azim = np.dot(azimuth, v_total)
             v_azim_test = Omega * pos_radial + np.dot(v_inflow + np.array([u, v, w]), azimuth)
-            # if abs(v_azim - v_azim_test) > 0.0001:
-            #     print('CAREFULL: v_azim =',v_azim)
-            #     print('v_azim_test =',v_azim_test)
-            v_axial = np.dot([1, 0, 0], v_total)
-
-            if i == 10:
+            if i == 10 and iter == 40:
                 print ('v_azim =',v_azim)
                 print ('v_azim_test =',v_azim_test)
-                print ('v_axial =',v_axial)
+            v_axial = np.dot([1, 0, 0], v_total)
+
+            # if i == 10:
+            #     print ('v_azim =',v_azim)
+            #     print ('v_azim_test =',v_azim_test)
+            #     print ('v_axial =',v_axial)
             # print('v_azim =',v_azim)
             # print('v_axial =',v_axial)
             BEM = calculate_BEM(v_azim, v_axial, Omega, pos_radial/ R)
@@ -142,16 +142,18 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
 
         for i in range(len(control_points)):
             gamma_updated[i] = relax * gamma_updated[i] + (1 - relax) * gamma[i]
+            gamma_nondim[i] = gamma_updated[i] * (n_blades * Omega) / (V_inf**2 * np.pi)
 
 
     #plot the error convergence
-    plt.figure()
-    plt.plot(iter_list, error_list)
-    plt.xlabel('Iteration')
-    plt.ylabel('Error')
-    plt.title('Convergence of the Lifting Line Solver')
-    plt.show()
-    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list]
+    # plt.figure()
+    # plt.plot(iter_list, error_list)
+    # plt.xlabel('Iteration')
+    # plt.ylabel('Error')
+    # plt.title('Convergence of the Lifting Line Solver')
+    # plt.show()
+
+    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list, gamma_nondim]
 
 
 def calculate_results(system_geom, V_inf, Omega, R):
@@ -170,8 +172,16 @@ def calculate_results(system_geom, V_inf, Omega, R):
     indeces_b2 = np.arange(number_of_cp_per_blade, 2*number_of_cp_per_blade)
     indeces_b3 = np.arange(2*number_of_cp_per_blade, 3*number_of_cp_per_blade)
     
+    ## TEST script ##
+    T_B1_test = 0
+    # dr = results[5][14]- results[5][13]
+    for i in range(len(indeces_b1)-1):
+        dr = results[5][i+1]- results[5][i]
+        T_B1_test += results[0][i]*dr
+    print('T_B1_test =',T_B1_test)
     # Calculate the total results on the blade
     T_B1 = np.trapz(results[0][indeces_b1], results[5][indeces_b1])
+    print('T_B1 =',T_B1)
     T_B2 = np.trapz(results[0][indeces_b2], results[5][indeces_b2])
     T_B3 = np.trapz(results[0][indeces_b3], results[5][indeces_b3]) 
     T = T_B1 + T_B2 + T_B3
@@ -181,12 +191,14 @@ def calculate_results(system_geom, V_inf, Omega, R):
     P = P_B1 + P_B2 + P_B3
 
     # Calculate the power and thrust coefficients
-    Cp = P / (0.5 * rho * V_inf**3 * np.pi * R**2)
-    Ct = T / (0.5 * rho * V_inf**2 * np.pi * R**2)
-    Cp_test = 4 * np.mean(results[-2]) * (1 - np.mean(results[-2]))**2
-   
+    CP = P / (0.5 * rho * V_inf**3 * np.pi * R**2)
+    CT = T / (0.5 * rho * V_inf**2 * np.pi * R**2)
+    print('a = ', np.mean(results[7]))
+    CP_a = 4 * np.mean(results[7]) * (1 - np.mean(results[7]))**2
+    CT_a = 4 * np.mean(results[7]) * (1 - np.mean(results[7]))
+    
 
-    return [results, T, P, Cp_test, Ct, indeces_b1, indeces_b2, indeces_b3]
+    return [results, T, P, CP, CT, CP_a, CT_a, indeces_b1, indeces_b2, indeces_b3]
 
 
 
