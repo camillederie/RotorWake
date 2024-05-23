@@ -110,9 +110,9 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             azimuth = np.cross([-1/pos_radial, 0, 0], np.array(control_points[i]['coordinates']))
             v_azim = np.dot(azimuth, v_total)
             v_azim_test = Omega * pos_radial + np.dot(v_inflow + np.array([u, v, w]), azimuth)
-            if i == 10 and iter == 40:
-                print ('v_azim =',v_azim)
-                print ('v_azim_test =',v_azim_test)
+            # if i == 10 and iter == 40:
+            #     print ('v_azim =',v_azim)
+            #     print ('v_azim_test =',v_azim_test)
             v_axial = np.dot([1, 0, 0], v_total)
 
             # if i == 10:

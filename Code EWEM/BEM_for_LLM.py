@@ -3,6 +3,7 @@ import math as m
 import numpy as np
 import pandas as pd
 from Geometry import geo_blade
+from Variables import *
 
 files = ['Code EWEM\polar_DU95W180.xlsx']
 #'Code EWEM\polar_DU95W180.xlsx'
@@ -30,8 +31,8 @@ def calculate_BEM(v_azim, v_axial,Omega, r_R):
     chord = geo_blade(r_R)[0]
     Cl, Cd, Cm = force_coeffs(alpha,aoa_tab,cl_tab,cd_tab,cm_tab)
     # Calculate the normal and tangential forces
-    L = 0.5 *V_mag**2 * Cl * chord
-    D = 0.5 *V_mag**2 * Cd * chord
+    L = 0.5 *V_mag**2 * Cl * chord * rho
+    D = 0.5 *V_mag**2 * Cd * chord * rho
     Fnorm = L * np.cos(phi) + D * np.sin(phi)
     Ftan = L * np.cos(phi) - D * np.sin(phi)
     Gamma = 0.5 * V_mag * chord * Cl
