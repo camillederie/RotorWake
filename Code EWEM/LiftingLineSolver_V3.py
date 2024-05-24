@@ -139,61 +139,61 @@ def velocity_3D_from_vortex_filament(GAMMA, XV1, XV2, XVP1, CORE):
 
     return [U, V, W]
 
-def solve_wing_lifting_line_system_matrix_approach(rotor_wake_system, Alpha):
-    controlpoints = rotor_wake_system['controlpoints']
-    rings = rotor_wake_system['rings']
-    velocity_induced = []
-    up, vp, wp = [], [], []
-    u, v, w = 0, 0, 0
-    GammaNew = [0] * len(controlpoints)
-    ClNew = [0] * len(controlpoints)
-    rNew = [controlpoint['coordinates'][1] for controlpoint in controlpoints]
-    Niterations = 20
-    MatrixU, MatrixV, MatrixW = [], [], []
-    errorlimit = 0.01
-    error = 1.0
-    ConvWeight = 0.1
+# def solve_wing_lifting_line_system_matrix_approach(rotor_wake_system, Alpha):
+#     controlpoints = rotor_wake_system['controlpoints']
+#     rings = rotor_wake_system['rings']
+#     velocity_induced = []
+#     up, vp, wp = [], [], []
+#     u, v, w = 0, 0, 0
+#     GammaNew = [0] * len(controlpoints)
+#     ClNew = [0] * len(controlpoints)
+#     rNew = [controlpoint['coordinates'][1] for controlpoint in controlpoints]
+#     Niterations = 20
+#     MatrixU, MatrixV, MatrixW = [], [], []
+#     errorlimit = 0.01
+#     error = 1.0
+#     ConvWeight = 0.1
 
-    for icp in range(len(controlpoints)):
-        for jring in range(len(rings)):
-            rings[jring] = update_Gamma_single_ring(rings[jring], 1, 1)
-            velocity_induced = velocity_induced_single_ring(rings[jring], controlpoints[icp]['coordinates'])
-            up.append(velocity_induced[0])
-            vp.append(velocity_induced[1])
-            wp.append(velocity_induced[2])
-            velocity_induced = []
+#     for icp in range(len(controlpoints)):
+#         for jring in range(len(rings)):
+#             rings[jring] = update_Gamma_single_ring(rings[jring], 1, 1)
+#             velocity_induced = velocity_induced_single_ring(rings[jring], controlpoints[icp]['coordinates'])
+#             up.append(velocity_induced[0])
+#             vp.append(velocity_induced[1])
+#             wp.append(velocity_induced[2])
+#             velocity_induced = []
 
-        MatrixU.append(up)
-        MatrixV.append(vp)
-        MatrixW.append(wp)
-        up, vp, wp = [], [], []
+#         MatrixU.append(up)
+#         MatrixV.append(vp)
+#         MatrixW.append(wp)
+#         up, vp, wp = [], [], []
 
-    for kiter in range(Niterations):
-        Gamma = GammaNew.copy()
-        for icp in range(len(controlpoints)):
-            u, v, w = 0, 0, 0
-            for jring in range(len(rings)):
-                u += MatrixU[icp][jring] * Gamma[jring]
-                v += MatrixV[icp][jring] * Gamma[jring]
-                w += MatrixW[icp][jring] * Gamma[jring]
+#     for kiter in range(Niterations):
+#         Gamma = GammaNew.copy()
+#         for icp in range(len(controlpoints)):
+#             u, v, w = 0, 0, 0
+#             for jring in range(len(rings)):
+#                 u += MatrixU[icp][jring] * Gamma[jring]
+#                 v += MatrixV[icp][jring] * Gamma[jring]
+#                 w += MatrixW[icp][jring] * Gamma[jring]
 
-            vel1 = [1 + u, v, 1 * math.sin(Alpha * math.pi / 180) + w]
-            angle1 = math.atan(vel1[2] / vel1[0])
-            ClNew[icp] = 2 * math.pi * math.sin(angle1)
-            vmag = math.sqrt(np.dot(vel1, vel1))
-            GammaNew[icp] = 0.5 * 1 * vmag * ClNew[icp]
+#             vel1 = [1 + u, v, 1 * math.sin(Alpha * math.pi / 180) + w]
+#             angle1 = math.atan(vel1[2] / vel1[0])
+#             ClNew[icp] = 2 * math.pi * math.sin(angle1)
+#             vmag = math.sqrt(np.dot(vel1, vel1))
+#             GammaNew[icp] = 0.5 * 1 * vmag * ClNew[icp]
 
-        refererror = max(abs(np.array(GammaNew)))
-        refererror = max(refererror, 0.001)
-        error = max(abs(np.array(GammaNew) - np.array(Gamma)))
-        error /= refererror
-        ConvWeight = max((1 - error) * 0.3, 0.1)
+#         refererror = max(abs(np.array(GammaNew)))
+#         refererror = max(refererror, 0.001)
+#         error = max(abs(np.array(GammaNew) - np.array(Gamma)))
+#         error /= refererror
+#         ConvWeight = max((1 - error) * 0.3, 0.1)
 
-        if error < errorlimit:
-            break
+#         if error < errorlimit:
+#             break
 
-        for ig in range(len(GammaNew)):
-            GammaNew[ig] = (1 - ConvWeight) * Gamma[ig] + ConvWeight * GammaNew[ig]
+#         for ig in range(len(GammaNew)):
+#             GammaNew[ig] = (1 - ConvWeight) * Gamma[ig] + ConvWeight * GammaNew[ig]
 
-    return GammaNew
+#     return GammaNew
 
