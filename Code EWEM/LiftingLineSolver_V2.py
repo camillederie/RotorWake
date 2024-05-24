@@ -11,7 +11,7 @@ from Variables import *
 def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # Inputs
     relax = 0.1
-    n_iterations = 500 # 1200
+    n_iterations = 10 # 1200
     error_limit = 0.1
     
     # system_geom: Contains the geometry of horseshoe vortex rings and control points at the blade
@@ -36,8 +36,8 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     phi_list = np.zeros(len(control_points))
     r_R_list = np.zeros(len(control_points))
     pos_radial_list = np.zeros(len(control_points))
-    a_list = np.zeros(len(control_points))
-    a_line_list = np.zeros(len(control_points))
+    a_list = np.ones(len(control_points)) * 0.33
+    a_line_list = np.ones(len(control_points))
     gamma_nondim = np.ones(len(control_points))
     ctan_list = np.zeros(len(control_points))
     cnormal_list = np.zeros(len(control_points))

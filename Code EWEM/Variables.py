@@ -4,7 +4,8 @@ import math as m
 R = 50.0
 R_Root_Ratio = 0.2
 TSR_list = [8]#[6,8,10]
-v_inf = 10.0
+v_inf = 10
+wind = [10.0,0,0]
 
 n_span = 20
 n_blades = 3
