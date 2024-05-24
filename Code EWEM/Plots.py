@@ -1,7 +1,19 @@
 import matplotlib.pyplot as plt
 #from Main import system_geom
 from Variables import *
+import numpy as np
 
+def read_array_from_file(filename):
+    #For every TSR, read the results from the file consisting of 3 collumns (one for TSR 6, 8 and 10) comma delimited, and return the results as a list of lists
+    results = []
+    with open(filename, 'r') as file:
+        for line in file:
+            values = line.strip().split(',')
+            results.append([float(value) for value in values])
+    TSR_6 = [item[0] for item in results]
+    TSR_8 = [item[1] for item in results]
+    TSR_10 = [item[2] for item in results]
+    return TSR_6, TSR_8, TSR_10
 
 def plot_blade_geometry(system_geom):
 # Extract control points, vortex rings, and blade panels from rotor_wake_system
@@ -55,7 +67,7 @@ def plot_blade_geometry(system_geom):
 #plt.show()
 
 def plot_results(results):
-    
+    r_BEM = np.linspace(0.2,1,401)
     # Extract the results from the dictionary
     results_TSR_6 = results[f"TSR_{TSR_list[0]}"][0]
     results_TSR_8 = results[f"TSR_{TSR_list[1]}"][0]
@@ -63,7 +75,7 @@ def plot_results(results):
     # print(results_TSR_6)
     indeces_b1 = results[f"TSR_{TSR_list[0]}"][7]
     # Plot 1: Gamma vs radial position
-    plt.figure(figsize=(10, 10))
+    plt.figure()
     plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[9][indeces_b1], label='TSR 6')
     plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[9][indeces_b1], label='TSR 8')
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[9][indeces_b1], label='TSR 10')
@@ -77,10 +89,15 @@ def plot_results(results):
     plt.close()
 
     # Plot 2: Alpha vs radial position
-    plt.figure(figsize=(10, 10))
-    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[3][indeces_b1], label='TSR 6')
-    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[3][indeces_b1], label='TSR 8')
-    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[3][indeces_b1], label='TSR 10')
+    alpha_TSR_6, alpha_TSR_8, alpha_TSR_10 = read_array_from_file('Arrays/Alpha_no_Prandtl.txt')
+    plt.figure()
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[3][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    plt.plot(r_BEM, alpha_TSR_6, linestyle = 'dashed', color = 'tab:blue', label='BEM TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[3][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    plt.plot(r_BEM, alpha_TSR_8, linestyle = 'dashed', color = 'tab:orange', label='BEM TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[3][indeces_b1], color = 'tab:green', label='LLM TSR 10')
+    plt.plot(r_BEM, alpha_TSR_10, color = 'tab:green', linestyle = 'dashed', label='BEM TSR 10')
+
     # ax1.set_title('Alpha vs radial position')
     plt.xlabel('Radial position')
     plt.ylabel('Alpha')
@@ -91,10 +108,14 @@ def plot_results(results):
     plt.close()
 
     # Plot 3: Phi vs radial position
-    plt.figure(figsize=(10, 10))
-    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[4][indeces_b1], label='TSR 6')
-    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[4][indeces_b1], label='TSR 8')
-    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[4][indeces_b1], label='TSR 10')
+    phi_TSR_6, phi_TSR_8, phi_TSR_10 = read_array_from_file('Arrays/Flow angle_no_Prandtl.txt')
+    plt.figure()
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[4][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    plt.plot(r_BEM, phi_TSR_6, linestyle = 'dashed', color = 'tab:blue', label='BEM TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[4][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    plt.plot(r_BEM, phi_TSR_8, linestyle = 'dashed', color = 'tab:orange', label='BEM TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[4][indeces_b1], color = 'tab:green', label='LLM TSR 10')
+    plt.plot(r_BEM, phi_TSR_10, color = 'tab:green', linestyle = 'dashed', label='BEM TSR 10')
     # ax.set_title('Phi vs radial position')
     plt.xlabel('Radial position')
     plt.ylabel('Phi')
@@ -104,10 +125,14 @@ def plot_results(results):
     plt.close()
 
     # Plot 4: Induction factor vs radial position
-    plt.figure(figsize=(10, 10))
-    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[7][indeces_b1], label='TSR 6')
-    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[7][indeces_b1], label='TSR 8')
-    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[7][indeces_b1], label='TSR 10')
+    a_TSR_6, a_TSR_8, a_TSR_10 = read_array_from_file('Arrays/Axial_no_Prandtl.txt')
+    plt.figure()
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[7][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    plt.plot(r_BEM, a_TSR_6, linestyle = 'dashed', color = 'tab:blue', label='BEM TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[7][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    plt.plot(r_BEM, a_TSR_8, linestyle = 'dashed', color = 'tab:orange', label='BEM TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[7][indeces_b1],color = 'tab:green', label='LLM TSR 10')
+    plt.plot(r_BEM, a_TSR_10, linestyle = 'dashed', color = 'tab:green', label='BEM TSR 10')
     # plt.title('Induction factor vs radial position')
     plt.xlabel('Radial position')
     plt.ylabel('Induction factor')
@@ -117,7 +142,7 @@ def plot_results(results):
     #plt.close()
 
     # Plot 5: Normal load coefficient vs radial position
-    plt.figure(figsize=(10, 10))
+    plt.figure()
     plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[11][indeces_b1], label='TSR 6')
     plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[11][indeces_b1], label='TSR 8')
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[11][indeces_b1], label='TSR 10')
@@ -129,7 +154,7 @@ def plot_results(results):
     plt.savefig('Normal_load_coefficient_vs_radial_position.png')
 
     # Plot 6: Tangential load coefficient vs radial position
-    plt.figure(figsize=(10, 10))
+    plt.figure()
     plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[10][indeces_b1], label='TSR 6')
     plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[10][indeces_b1], label='TSR 8')
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[10][indeces_b1], label='TSR 10')
