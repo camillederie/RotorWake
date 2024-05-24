@@ -34,8 +34,10 @@ def calculate_BEM(v_azim, v_axial,Omega, r_R):
     L = 0.5 *V_mag**2 * Cl * chord * rho
     D = 0.5 *V_mag**2 * Cd * chord * rho
     Fnorm = L * np.cos(phi) + D * np.sin(phi)
-    Ftan = L * np.cos(phi) - D * np.sin(phi)
+    Ftan = L * np.sin(phi) - D * np.cos(phi)
+    ctan = Ftan / (0.5 * rho * v_inf**2 * R)
+    cnormal = Fnorm / (0.5 * rho * v_inf**2 * R)
     Gamma = 0.5 * V_mag * chord * Cl
     
     
-    return [Fnorm, Ftan, Gamma, alpha, phi_deg]
+    return [Fnorm, Ftan, Gamma, alpha, phi_deg, ctan, cnormal]

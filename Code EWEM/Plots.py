@@ -60,52 +60,84 @@ def plot_results(results):
     results_TSR_6 = results[f"TSR_{TSR_list[0]}"][0]
     results_TSR_8 = results[f"TSR_{TSR_list[1]}"][0]
     results_TSR_10 = results[f"TSR_{TSR_list[2]}"][0]
+    # print(results_TSR_6)
     indeces_b1 = results[f"TSR_{TSR_list[0]}"][7]
-    # plot gamma vs radial position
-    plt.figure(figsize=(10, 5))
+    # Plot 1: Gamma vs radial position
+    plt.figure(figsize=(10, 10))
     plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[9][indeces_b1], label='TSR 6')
     plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[9][indeces_b1], label='TSR 8')
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[9][indeces_b1], label='TSR 10')
-    plt.title('Gamma vs radial position')
+    # plt.title('Gamma vs radial position')
     plt.xlabel('Radial position')
     plt.ylabel('Gamma')
     plt.legend()
     plt.grid()
-    #plt.show()
-    # plot alpha vs radial position and phi vs radial position
+    # plt.axis('square')
+    plt.savefig('Gamma_vs_radial_position.png')
+    plt.close()
 
-    fig, ax = plt.subplots(2, 1, figsize=(10, 10))
-    ax[0].plot(results_TSR_6[6][indeces_b1], results_TSR_6[3][indeces_b1], label= 'TSR 6')
-    ax[0].plot(results_TSR_8[6][indeces_b1], results_TSR_8[3][indeces_b1], label= 'TSR 8')
-    ax[0].plot(results_TSR_10[6][indeces_b1], results_TSR_10[3][indeces_b1], label= 'TSR 10')
+    # Plot 2: Alpha vs radial position
+    plt.figure(figsize=(10, 10))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[3][indeces_b1], label='TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[3][indeces_b1], label='TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[3][indeces_b1], label='TSR 10')
+    # ax1.set_title('Alpha vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Alpha')
+    plt.legend()
+    plt.grid()
+    # ax1.axis('square')
+    plt.savefig('Alpha_vs_radial_position.png')
+    plt.close()
 
-    ax[0].set_title('Alpha vs radial position') 
-    ax[0].set_xlabel('Radial position')
-    ax[0].set_ylabel('Alpha')
-    ax[0].legend()
-    ax[0].grid()
+    # Plot 3: Phi vs radial position
+    plt.figure(figsize=(10, 10))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[4][indeces_b1], label='TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[4][indeces_b1], label='TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[4][indeces_b1], label='TSR 10')
+    # ax.set_title('Phi vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Phi')
+    plt.legend()
+    plt.grid()
+    plt.savefig('Phi_vs_radial_position.png')
+    plt.close()
 
-    ax[1].plot(results_TSR_6[6][indeces_b1], results_TSR_6[4][indeces_b1], label= 'TSR 6')
-    ax[1].plot(results_TSR_8[6][indeces_b1], results_TSR_8[4][indeces_b1], label= 'TSR 8')
-    ax[1].plot(results_TSR_10[6][indeces_b1], results_TSR_10[4][indeces_b1], label= 'TSR 10')
-    ax[1].set_title('Phi vs radial position')
-    ax[1].set_xlabel('Radial position')
-    ax[1].set_ylabel('Phi')
-    ax[1].legend()
-    ax[1].grid()
-    #plt.show()
-
-    plt.figure(figsize=(10, 5))
-    #Plot induction factor vs radial position
+    # Plot 4: Induction factor vs radial position
+    plt.figure(figsize=(10, 10))
     plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[7][indeces_b1], label='TSR 6')
     plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[7][indeces_b1], label='TSR 8')
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[7][indeces_b1], label='TSR 10')
-    plt.title('Induction factor vs radial position')
+    # plt.title('Induction factor vs radial position')
     plt.xlabel('Radial position')
     plt.ylabel('Induction factor')
     plt.legend()
     plt.grid()
-    #plt.show()
+    plt.savefig('Induction_factor_vs_radial_position.png')
+    #plt.close()
 
+    # Plot 5: Normal load coefficient vs radial position
+    plt.figure(figsize=(10, 10))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[11][indeces_b1], label='TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[11][indeces_b1], label='TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[11][indeces_b1], label='TSR 10')
+    # plt.title('Normal load coefficient vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Normal load coefficient')
+    plt.legend()
+    plt.grid()
+    plt.savefig('Normal_load_coefficient_vs_radial_position.png')
 
+    # Plot 6: Tangential load coefficient vs radial position
+    plt.figure(figsize=(10, 10))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[10][indeces_b1], label='TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[10][indeces_b1], label='TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[10][indeces_b1], label='TSR 10')
+    # plt.title('Tangential load coefficient vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Tangential load coefficient')
+    plt.legend()
+    plt.grid()
+    plt.savefig('Tangential_load_coefficient_vs_radial_position.png')
 
+    

@@ -10,18 +10,16 @@ from Variables import *
 
 def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # Inputs
-    relax = 0.05
+    relax = 0.1
     n_iterations = 500 # 1200
-    error_limit = 0.001
+    error_limit = 0.1
     
     # system_geom: Contains the geometry of horseshoe vortex rings and control points at the blade
 
     control_points = system_geom['controlpoints']
     rings = system_geom['rings']
     
-    matrix_u = []
-    matrix_v = []
-    matrix_w = []
+   
     
     gamma_updated = np.ones(len(control_points))
     gamma = np.ones(len(control_points))
@@ -29,47 +27,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     print('length filaments =',len(rings[0]['filaments']))
     print('length control points =',len(control_points))
 
-    for i in range(len(control_points)):
-        matrix_u.append([])
-        matrix_v.append([])
-        matrix_w.append([])
-        #print('i =',i)
-        for j in range(len(rings)):
-            for k in range(len(rings[0]['filaments'])):
-                rings[j]['filaments'][k]['Gamma'] = 1 # Set ring strength to unity for calculating induced velocity at control point p
-        
-        for r in rings: 
-            v_ind = np.zeros(3)
-            for f in r['filaments']:
-                GAMMA = f['Gamma']
-                X1, Y1, Z1 = f['x1'],f['y1'],f['z1']	# Start point of filament
-                X2, Y2, Z2 = f['x2'],f['y2'],f['z2']
-                XP, YP, ZP = control_points[i]['coordinates'][0], control_points[i]['coordinates'][1], control_points[i]['coordinates'][2]
-                R1 = math.sqrt((XP - X1) ** 2 + (YP - Y1) ** 2 + (ZP - Z1) ** 2)
-                R2 = math.sqrt((XP - X2) ** 2 + (YP - Y2) ** 2 + (ZP - Z2) ** 2)
-                R1XR2_X = (YP - Y1) * (ZP - Z2) - (ZP - Z1) * (YP - Y2)
-                R1XR2_Y = -(XP - X1) * (ZP - Z2) + (ZP - Z1) * (XP - X2)
-                R1XR2_Z = (XP - X1) * (YP - Y2) - (YP - Y1) * (XP - X2)
-                R1XR_SQR = R1XR2_X ** 2 + R1XR2_Y ** 2 + R1XR2_Z ** 2
-
-                if R1XR_SQR < 0.0001:
-                    R1XR_SQR = 0.0001
-                if R1 < 0.0001:
-                    R1 = 0.0001
-                if R2 < 0.0001:
-                    R2 = 0.0001
-
-                R0R1 = (X2 - X1) * (XP - X1) + (Y2 - Y1) * (YP - Y1) + (Z2 - Z1) * (ZP - Z1)
-                R0R2 = (X2 - X1) * (XP - X2) + (Y2 - Y1) * (YP - Y2) + (Z2 - Z1) * (ZP - Z2)
-
-                K = (GAMMA / (4 * math.pi * R1XR_SQR)) * ((R0R1 / R1) - (R0R2 / R2))
-                v_ind[0] += K * R1XR2_X
-                v_ind[1] += K * R1XR2_Y
-                v_ind[2] += K * R1XR2_Z
-            matrix_u[i].append(v_ind[0])
-            matrix_v[i].append(v_ind[1])
-            matrix_w[i].append(v_ind[2])
-    print('Induced velocities calculated')
+    
 
     #print('matrix_u =',matrix_u)
     F_norm_list = np.zeros(len(control_points))
@@ -91,15 +49,62 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     for iter in range(n_iterations):
         gamma = gamma_updated.copy()    
         print('iter =',iter)
+        
+            
+        matrix_u = []
+        matrix_v = []
+        matrix_w = []
         for i in range(len(control_points)):
-    
+            matrix_u.append([])
+            matrix_v.append([])
+            matrix_w.append([])
+            #print('i =',i)
+            for j in range(len(rings)):
+                for k in range(len(rings[0]['filaments'])):
+                    rings[j]['filaments'][k]['Gamma'] = gamma[i] 
+            
+            for r in rings: 
+                v_ind = np.zeros(3)
+                for f in r['filaments']:
+                    GAMMA = f['Gamma']
+                    X1, Y1, Z1 = f['x1'],f['y1'],f['z1']	# Start point of filament
+                    X2, Y2, Z2 = f['x2'],f['y2'],f['z2']
+                    XP, YP, ZP = control_points[i]['coordinates'][0], control_points[i]['coordinates'][1], control_points[i]['coordinates'][2]
+                    R1 = math.sqrt((XP - X1) ** 2 + (YP - Y1) ** 2 + (ZP - Z1) ** 2)
+                    R2 = math.sqrt((XP - X2) ** 2 + (YP - Y2) ** 2 + (ZP - Z2) ** 2)
+                    R1XR2_X = (YP - Y1) * (ZP - Z2) - (ZP - Z1) * (YP - Y2)
+                    R1XR2_Y = -(XP - X1) * (ZP - Z2) + (ZP - Z1) * (XP - X2)
+                    R1XR2_Z = (XP - X1) * (YP - Y2) - (YP - Y1) * (XP - X2)
+                    R1XR_SQR = R1XR2_X ** 2 + R1XR2_Y ** 2 + R1XR2_Z ** 2
+
+                    if R1XR_SQR < 0.0001:
+                        R1XR_SQR = 0.0001
+                    if R1 < 0.0001:
+                        R1 = 0.0001
+                    if R2 < 0.0001:
+                        R2 = 0.0001
+
+                    R0R1 = (X2 - X1) * (XP - X1) + (Y2 - Y1) * (YP - Y1) + (Z2 - Z1) * (ZP - Z1)
+                    R0R2 = (X2 - X1) * (XP - X2) + (Y2 - Y1) * (YP - Y2) + (Z2 - Z1) * (ZP - Z2)
+
+                    K = (GAMMA / (4 * math.pi * R1XR_SQR)) * ((R0R1 / R1) - (R0R2 / R2))
+                    v_ind[0] += K * R1XR2_X
+                    v_ind[1] += K * R1XR2_Y
+                    v_ind[2] += K * R1XR2_Z
+                matrix_u[i].append(v_ind[0])
+                matrix_v[i].append(v_ind[1])
+                matrix_w[i].append(v_ind[2])
+                #print('Induced velocities calculated')
+
+        for i in range(len(control_points)):
+
             pos_radial = np.linalg.norm(control_points[i]['coordinates'])
             
             u = v = w = 0
             for j in range(len(rings)):
-                u += matrix_u[i][j] * gamma[j]
-                v += matrix_v[i][j] * gamma[j]
-                w += matrix_w[i][j] * gamma[j]
+                u += matrix_u[i][j] * gamma[i]
+                v += matrix_v[i][j] * gamma[i]
+                w += matrix_w[i][j] * gamma[i]
             # print('u =',u)
             # Calculate the velocity at the control point
            
@@ -142,6 +147,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
      
 
         error = max(abs(np.array(gamma_updated) - np.array(gamma)))
+        print(error)
         error_list.append(error)
         iter_list.append(iter)
         if error < error_limit:

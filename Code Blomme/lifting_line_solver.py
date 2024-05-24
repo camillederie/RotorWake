@@ -126,7 +126,7 @@ class LiftingLineSolver:
         cl = self.fcl(alpha)
         cd = self.fcd(alpha)
 
-        L = 0.5 * V_mag2 * cl * chord
+        L = 0.5 * V_mag2 * cl * chord 
         D = 0.5 * V_mag2 * cd * chord
 
         F_norm = L * np.cos(phi) + D * np.sin(phi)
