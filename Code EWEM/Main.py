@@ -2,7 +2,7 @@ import math as m
 
 import numpy as np
 from Geometry import create_rotor_geometry, geo_blade, spanwise_discretisation
-from LiftingLineSolver_V2 import *
+from LiftingLineSolver import *
 from matplotlib import pyplot as plt
 from Plots import plot_blade_geometry, plot_results
 from Variables import *
@@ -27,7 +27,7 @@ for TSR in TSR_list:
     # print('CP, CT = ' ,results[3], results[4], results[5], results[6])
 
 plot_results(results)
-#plt.show()
+
 # Print all CP en CT values 
 
 for TSR, result in results.items():
@@ -39,3 +39,4 @@ for TSR, result in results.items():
     print()
 
 
+plt.show()

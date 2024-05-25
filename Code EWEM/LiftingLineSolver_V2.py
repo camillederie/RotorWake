@@ -11,7 +11,7 @@ from Variables import *
 def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # Inputs
     relax = 0.1
-    n_iterations = 10 # 1200
+    n_iterations = 100 # 1200
     error_limit = 0.1
     
     # system_geom: Contains the geometry of horseshoe vortex rings and control points at the blade
@@ -49,8 +49,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     for iter in range(n_iterations):
         gamma = gamma_updated.copy()    
         print('iter =',iter)
-        
-            
+          
         matrix_u = []
         matrix_v = []
         matrix_w = []
@@ -96,15 +95,18 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
                 matrix_w[i].append(v_ind[2])
                 #print('Induced velocities calculated')
 
-        for i in range(len(control_points)):
+        #for i in range(len(control_points)):
 
             pos_radial = np.linalg.norm(control_points[i]['coordinates'])
             
-            u = v = w = 0
-            for j in range(len(rings)):
-                u += matrix_u[i][j] * gamma[i]
-                v += matrix_v[i][j] * gamma[i]
-                w += matrix_w[i][j] * gamma[i]
+            # u = v = w = 0
+            # for j in range(len(rings)):
+            #     u += matrix_u[i][j] * gamma[i]
+            #     v += matrix_v[i][j] * gamma[i]
+            #     w += matrix_w[i][j] * gamma[i]
+            u  = np.dot(matrix_u[i], gamma)
+            v  = np.dot(matrix_v[i], gamma)
+            w  = np.dot(matrix_w[i], gamma)
             # print('u =',u)
             # Calculate the velocity at the control point
            

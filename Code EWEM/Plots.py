@@ -140,4 +140,45 @@ def plot_results(results):
     plt.grid()
     plt.savefig('Tangential_load_coefficient_vs_radial_position.png')
 
+    # Plot 7: Induction velocity U vs radial position
+    plt.figure(figsize=(10, 10))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[13][indeces_b1], label='TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[13][indeces_b1], label='TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[13][indeces_b1], label='TSR 10')
+    # plt.title('Induction velocity U vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('Induction velocity U')
+    plt.legend()
+    plt.grid()
+    plt.savefig('Induction_velocity_U_vs_radial_position.png')
+    
+    # Plot 8: V_ototal _mag vs radial position
+
+    plt.figure(figsize=(5, 5))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[14][indeces_b1], label='TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[14][indeces_b1], label='TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[14][indeces_b1], label='TSR 10')
+    # plt.title('Induction velocity U vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('V_total_mag')
+    plt.legend()
+    plt.grid()
+    plt.savefig('V_total_mag_vs_radial_position.png')
+
+    # Plot 9: V_axial and V_azim vs radial position
+    plt.figure(figsize=(5, 5))
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[15][indeces_b1], label='TSR 6 axial')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[15][indeces_b1], label='TSR 8 axial')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[15][indeces_b1], label='TSR 10 axial')
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[16][indeces_b1], label='TSR 6 azim')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[16][indeces_b1], label='TSR 8 azim')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[16][indeces_b1], label='TSR 10 azim')
+    # plt.title('Induction velocity U vs radial position')
+    plt.xlabel('Radial position')
+    plt.ylabel('V_axial and V_azim')
+    plt.legend()
+    plt.grid()
+    plt.savefig('V_axial_and_V_azim_vs_radial_position.png')
+
+
     
