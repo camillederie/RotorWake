@@ -4,7 +4,6 @@ import math
 from Variables import *
 from BEM_for_LLM import calculate_BEM
 
-
 """
 This is a test and its not working well :(
 """

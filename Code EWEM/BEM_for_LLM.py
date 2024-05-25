@@ -31,8 +31,8 @@ def calculate_BEM(v_azim, v_axial,Omega, r_R):
     chord = geo_blade(r_R)[0]
     Cl, Cd, Cm = force_coeffs(alpha,aoa_tab,cl_tab,cd_tab,cm_tab)
     # Calculate the normal and tangential forces
-    L = 0.5 *V_mag**2 * Cl * chord * rho
-    D = 0.5 *V_mag**2 * Cd * chord * rho
+    L = 0.5 * V_mag**2 * Cl * chord * rho
+    D = 0.5 * V_mag**2 * Cd * chord * rho
     Fnorm = L * np.cos(phi) + D * np.sin(phi)
     Ftan = L * np.sin(phi) - D * np.cos(phi)
     ctan = Ftan / (0.5 * rho * v_inf**2 * R)
