@@ -52,7 +52,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
     # Uinf: freestream velocity
     # theta_array: array of azimuthal positions
     # n_blades: number of blades
-
+    a = 0.33
     filaments = []
     ring = []
     controlpoints = []
@@ -93,7 +93,6 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
             ]
 
             controlpoints.append(temp1)
-            # print(controlpoints)
 
             # Create vortex rings
             # Bound filaments
@@ -128,6 +127,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 dy = (m.cos(-theta_array[j + 1]) - m.cos(-theta_array[j])) * span_array[i]
                 dz = (m.sin(-theta_array[j + 1]) - m.sin(-theta_array[j])) * span_array[i]
                 dx = (theta_array[j + 1] - theta_array[j]) / TSR * R
+                # dx = (theta_array[j + 1] - theta_array[j]) / (TSR / ( 1 - a ))
 
                 temp1 = {
                     'x1': xt + dx,
@@ -160,6 +160,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 dy = (m.cos(-theta_array[j + 1]) - m.cos(-theta_array[j])) * span_array[i + 1]
                 dz = (m.sin(-theta_array[j + 1]) - m.sin(-theta_array[j])) * span_array[i + 1]
                 dx = (theta_array[j + 1] - theta_array[j]) / TSR * R
+                # dx = (theta_array[j + 1] - theta_array[j]) / (TSR / ( 1 - a ))
 
                 temp1 = {
                     'x1': xt,
@@ -223,5 +224,5 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
             ]
 
             bladepanels.append(temp1)
-
+    
     return {'controlpoints': controlpoints, 'rings': ring, 'bladepanels': bladepanels}

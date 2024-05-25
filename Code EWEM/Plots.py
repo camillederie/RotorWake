@@ -16,7 +16,7 @@ def read_array_from_file(filename):
     return TSR_6, TSR_8, TSR_10
 
 def plot_blade_geometry(system_geom):
-# Extract control points, vortex rings, and blade panels from rotor_wake_system
+    # Extract control points, vortex rings, and blade panels from rotor_wake_system
     controlpoints = system_geom['controlpoints']
     rings = system_geom['rings']
     bladepanels = system_geom['bladepanels']
@@ -42,7 +42,7 @@ def plot_blade_geometry(system_geom):
             x2 = filament['x2']
             y2 = filament['y2']
             z2 = filament['z2']
-            ax.plot([x1, x2], [y1, y2], [z1, z2], color='blue')
+            ax.plot([x1, x2], [y1, y2], [z1, z2], color='blue', linewidth=0.5)  # Make the lines thinner
 
     # Plot blade panels
     for panel in bladepanels:
@@ -53,7 +53,7 @@ def plot_blade_geometry(system_geom):
         xs = [p1[0], p2[0], p3[0], p4[0], p1[0]]
         ys = [p1[1], p2[1], p3[1], p4[1], p1[1]]
         zs = [p1[2], p2[2], p3[2], p4[2], p1[2]]
-        ax.plot(xs, ys, zs, color='green')
+        ax.plot(xs, ys, zs, color='green', linewidth=0.5)  # Make the lines thinner
 
     # Set labels and title
     ax.set_xlabel('X')
@@ -80,8 +80,8 @@ def plot_results(results):
     plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[9][indeces_b1], label='TSR 8')
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[9][indeces_b1], label='TSR 10')
     # plt.title('Gamma vs radial position')
-    plt.xlabel('Radial position')
-    plt.ylabel('Gamma')
+    plt.xlabel('Radial position [-]')
+    plt.ylabel('Gamma [-]')
     plt.legend()
     plt.grid()
     # plt.axis('square')
@@ -99,8 +99,8 @@ def plot_results(results):
     plt.plot(r_BEM, alpha_TSR_10, color = 'tab:green', linestyle = 'dashed', label='BEM TSR 10')
 
     # ax1.set_title('Alpha vs radial position')
-    plt.xlabel('Radial position')
-    plt.ylabel('Alpha')
+    plt.xlabel('Radial position [-]')
+    plt.ylabel('Alpha [deg]')
     plt.legend()
     plt.grid()
     # ax1.axis('square')
@@ -117,8 +117,8 @@ def plot_results(results):
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[4][indeces_b1], color = 'tab:green', label='LLM TSR 10')
     plt.plot(r_BEM, phi_TSR_10, color = 'tab:green', linestyle = 'dashed', label='BEM TSR 10')
     # ax.set_title('Phi vs radial position')
-    plt.xlabel('Radial position')
-    plt.ylabel('Phi')
+    plt.xlabel('Radial position [-]')
+    plt.ylabel('Phi [deg]')
     plt.legend()
     plt.grid()
     plt.savefig('Phi_vs_radial_position.png')
@@ -134,12 +134,27 @@ def plot_results(results):
     plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[7][indeces_b1],color = 'tab:green', label='LLM TSR 10')
     plt.plot(r_BEM, a_TSR_10, linestyle = 'dashed', color = 'tab:green', label='BEM TSR 10')
     # plt.title('Induction factor vs radial position')
-    plt.xlabel('Radial position')
-    plt.ylabel('Induction factor')
+    plt.xlabel('Radial position [-]')
+    plt.ylabel('Induction factor [-]')
     plt.legend()
     plt.grid()
-    plt.savefig('Induction_factor_vs_radial_position.png')
+    plt.savefig('Axial_Induction_factor_vs_radial_position.png')
     #plt.close()
+
+    ap_TSR_6, ap_TSR_8, ap_TSR_10 = read_array_from_file('Arrays/Azimuthal_no_Prandtl.txt')
+    plt.figure()
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[8][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    plt.plot(r_BEM, ap_TSR_6, linestyle = 'dashed', color = 'tab:blue', label='BEM TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[8][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    plt.plot(r_BEM, ap_TSR_8, linestyle = 'dashed', color = 'tab:orange', label='BEM TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[8][indeces_b1],color = 'tab:green', label='LLM TSR 10')
+    plt.plot(r_BEM, ap_TSR_10, linestyle = 'dashed', color = 'tab:green', label='BEM TSR 10')
+    # plt.title('Induction factor vs radial position')
+    plt.xlabel('Radial position [-]')
+    plt.ylabel('Azimuthal Induction factor [-]')
+    plt.legend()
+    plt.grid()
+    plt.savefig('Azimuthal_Induction_factor_vs_radial_position.png')
 
     # Plot 5: Normal load coefficient vs radial position
     plt.figure()

@@ -9,8 +9,8 @@ wind = [10.0,0,0]
 
 n_span = 20
 n_blades = 3
-n_rotations = 3
+n_rotations = 5
 n_theta = 200
 #Omega =  TSR * v_inf / R # Rotational speed in rad/s
 rho = 1.225
-Method = "Cosine"
+Method = "Equal"

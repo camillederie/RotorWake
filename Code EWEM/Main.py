@@ -18,7 +18,6 @@ for TSR in TSR_list:
     span_array, theta_array = spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations)
     system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades)
 
-    #plot_blade_geometry(system_geom)
     #write code to save the system_geom dictionary to a .txt file
     # np.savetxt('system_geom.txt', np.array(list(system_geom.items())), fmt='%s')
 
@@ -27,7 +26,8 @@ for TSR in TSR_list:
     # print('CP, CT = ' ,results[3], results[4], results[5], results[6])
 
 plot_results(results)
-# plt.show()
+plot_blade_geometry(system_geom)
+plt.show()
 # Print all CP en CT values 
 
 for TSR, result in results.items():

@@ -10,8 +10,8 @@ from Variables import *
 
 def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # Inputs
-    relax = 0.05
-    n_iterations = 500 # 1200
+    relax = 0.1
+    n_iterations = 700 # 1200
     error_limit = 0.001
     
     # system_geom: Contains the geometry of horseshoe vortex rings and control points at the blade
@@ -37,7 +37,6 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
         for j in range(len(rings)):
             for k in range(len(rings[0]['filaments'])):
                 rings[j]['filaments'][k]['Gamma'] = 1 # Set ring strength to unity for calculating induced velocity at control point p
-        
         for r in rings: 
             v_ind = np.zeros(3)
             for f in r['filaments']:
