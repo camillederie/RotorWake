@@ -50,18 +50,20 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
                 R1XR2_Y = -(XP - X1) * (ZP - Z2) + (ZP - Z1) * (XP - X2)
                 R1XR2_Z = (XP - X1) * (YP - Y2) - (YP - Y1) * (XP - X2)
                 R1XR_SQR = R1XR2_X ** 2 + R1XR2_Y ** 2 + R1XR2_Z ** 2
+                
+                R0R1 = (X2 - X1) * (XP - X1) + (Y2 - Y1) * (YP - Y1) + (Z2 - Z1) * (ZP - Z1)
+                R0R2 = (X2 - X1) * (XP - X2) + (Y2 - Y1) * (YP - Y2) + (Z2 - Z1) * (ZP - Z2)
 
-                if R1XR_SQR < 0.0001:
-                    R1XR_SQR = 0.0001
+                if R1XR_SQR < 0.0001 ** 2:
+                    R1XR_SQR = 0.0001 ** 2
                 if R1 < 0.0001:
                     R1 = 0.0001
                 if R2 < 0.0001:
                     R2 = 0.0001
 
-                R0R1 = (X2 - X1) * (XP - X1) + (Y2 - Y1) * (YP - Y1) + (Z2 - Z1) * (ZP - Z1)
-                R0R2 = (X2 - X1) * (XP - X2) + (Y2 - Y1) * (YP - Y2) + (Z2 - Z1) * (ZP - Z2)
 
-                K = (GAMMA / (4 * math.pi * R1XR_SQR)) * ((R0R1 / R1) - (R0R2 / R2))
+                K = (1 / (4 * math.pi * R1XR_SQR)) * ((R0R1 / R1) - (R0R2 / R2))
+                
                 v_ind[0] += K * R1XR2_X
                 v_ind[1] += K * R1XR2_Y
                 v_ind[2] += K * R1XR2_Z
@@ -69,7 +71,9 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             matrix_v[i].append(v_ind[1])
             matrix_w[i].append(v_ind[2])
     print('Induced velocities calculated')
-
+    # save U_matrix to txt file
+    np.savetxt(f'U_matrix_{Omega}_us.txt', matrix_u, fmt='%1.4e')
+    #matrix_u = np.loadtxt(f'U_matrix_{Omega}_pim.txt')
     #print('matrix_u =',matrix_u)
     F_norm_list = np.zeros(len(control_points))
     F_tan_list = np.zeros(len(control_points))
@@ -83,6 +87,10 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     ctan_list = np.zeros(len(control_points))
     cnormal_list = np.zeros(len(control_points))
     V_azim_list = np.zeros(len(control_points))
+    u_list = np.zeros(len(control_points))
+    v_total_mag_list = np.zeros(len(control_points))
+    v_axial_list = np.zeros(len(control_points))
+    v_azim_list = np.zeros(len(control_points))
 
     error_list = []
     iter_list = []
@@ -94,12 +102,18 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     
             pos_radial = np.linalg.norm(control_points[i]['coordinates'])
             
-            u = v = w = 0
-            for j in range(len(rings)):
-                u += matrix_u[i][j] * gamma[j]
-                v += matrix_v[i][j] * gamma[j]
-                w += matrix_w[i][j] * gamma[j]
-            # print('u =',u)
+            # u = v = w = 0
+            # for j in range(len(rings)):
+            #     u += matrix_u[i][j] * gamma[i]
+            #     v += matrix_v[i][j] * gamma[i]
+            #     w += matrix_w[i][j] * gamma[i]
+            u  = np.dot(matrix_u[i], gamma)
+            v  = np.dot(matrix_v[i], gamma)
+            w  = np.dot(matrix_w[i], gamma)
+            # if i == 10 and iter == 40:
+            #     print('u_test =',u_test)
+            #     print('u =',u)
+            
             # Calculate the velocity at the control point
            
             v_rotational = np.cross(np.array([-Omega, 0, 0]), np.array(control_points[i]['coordinates']))
@@ -118,12 +132,13 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             #     print ('v_azim_test =',v_azim_test)
             v_axial = np.dot([1, 0, 0], v_total)
 
-            # if i == 10:
-            #     print ('v_azim =',v_azim)
-            #     print ('v_azim_test =',v_azim_test)
-            #     print ('v_axial =',v_axial)
-            # print('v_azim =',v_azim)
-            # print('v_axial =',v_axial)
+            if i == 10 and iter == 100:
+                print ('v_tot 1 =',np.sqrt(v_azim**2 + v_axial**2))
+                print ('v_tot 2',np.linalg.norm(v_total))
+                
+            
+            # if (np.linalg.norm(v_total) - np.sqrt(v_azim**2 + v_axial**2)) > 0.01:
+            #     print('Error in total velocity')
             BEM = calculate_BEM(v_azim, v_axial, Omega, pos_radial/ R)
             F_norm_list[i] = BEM[0]
             F_tan_list[i] = BEM[1]
@@ -137,6 +152,10 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             a_line_list[i] = v_azim / (Omega * pos_radial) - 1
             pos_radial_list[i] = pos_radial
             V_azim_list[i] = v_azim
+            u_list[i] = u
+            v_total_mag_list[i] = np.linalg.norm(v_total)
+            v_axial_list[i] = v_axial
+            v_azim_list[i] = v_azim
 
      
 
@@ -159,7 +178,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # plt.title('Convergence of the Lifting Line Solver')
     # plt.show()
 
-    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list, gamma_nondim, ctan_list, cnormal_list, V_azim_list]
+    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list, gamma_nondim, ctan_list, cnormal_list, V_azim_list, u_list, v_total_mag_list, v_axial_list, v_azim_list]
 
 
 def calculate_results(system_geom, V_inf, Omega, R):
