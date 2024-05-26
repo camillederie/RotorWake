@@ -17,9 +17,9 @@ def read_array_from_file(filename):
 
 def plot_blade_geometry(system_geom):
     # Extract control points, vortex rings, and blade panels from rotor_wake_system
-    controlpoints = system_geom['controlpoints']
-    rings = system_geom['rings']
-    bladepanels = system_geom['bladepanels']
+    controlpoints = system_geom[0]
+    rings = system_geom[3]
+    # bladepanels = system_geom['bladepanels']
 
     # Create a 3D plot
     fig = plt.figure()
@@ -27,21 +27,24 @@ def plot_blade_geometry(system_geom):
 
     # Plot control points
     for cp in controlpoints:
-        x = cp['coordinates'][0]
-        y = cp['coordinates'][1]
-        z = cp['coordinates'][2]
+        x = cp[0]
+        y = cp[1]
+        z = cp[2]
         ax.scatter(x, y, z, color='red')
 
     # Plot vortex rings
     for ring in rings:
-        filaments = ring['filaments']
-        for filament in filaments:
-            x1 = filament['x1']
-            y1 = filament['y1']
-            z1 = filament['z1']
-            x2 = filament['x2']
-            y2 = filament['y2']
-            z2 = filament['z2']
+        filaments = ring
+        for i, filament in enumerate(filaments):
+            #Make it that i+1 will not cause an index error at the last iteration
+            if i == len(filaments) - 1:
+                break
+            x1 = filaments[i][0]
+            y1 = filaments[i][1]
+            z1 = filaments[i][2]
+            x2 = filaments[i+1][0]
+            y2 = filaments[i+1][1]
+            z2 = filaments[i+1][2]
             ax.plot([x1, x2], [y1, y2], [z1, z2], color='blue', linewidth=0.5)  # Make the lines thinner
 
     # Plot blade panels
@@ -72,8 +75,9 @@ def plot_results(results):
     results_TSR_6 = results[f"TSR_{TSR_list[0]}"][0]
     results_TSR_8 = results[f"TSR_{TSR_list[1]}"][0]
     results_TSR_10 = results[f"TSR_{TSR_list[2]}"][0]
-    # print(results_TSR_6)
+
     indeces_b1 = results[f"TSR_{TSR_list[0]}"][7]
+
     # Plot 1: Gamma vs radial position
     plt.figure()
     plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[9][indeces_b1], label='TSR 6')
@@ -91,11 +95,18 @@ def plot_results(results):
     # Plot 2: Alpha vs radial position
     alpha_TSR_6, alpha_TSR_8, alpha_TSR_10 = read_array_from_file('Arrays/Alpha_no_Prandtl.txt')
     plt.figure()
-    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[3][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    # plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[3][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    # plt.plot(r_BEM, alpha_TSR_6, linestyle = 'dashed', color = 'tab:blue', label='BEM TSR 6')
+    # plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[3][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    # plt.plot(r_BEM, alpha_TSR_8, linestyle = 'dashed', color = 'tab:orange', label='BEM TSR 8')
+    # plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[3][indeces_b1], color = 'tab:green', label='LLM TSR 10')
+    # plt.plot(r_BEM, alpha_TSR_10, color = 'tab:green', linestyle = 'dashed', label='BEM TSR 10')
+
+    plt.plot(results_TSR_6[6], results_TSR_6[3], color = 'tab:blue', label='LLM TSR 6')
     plt.plot(r_BEM, alpha_TSR_6, linestyle = 'dashed', color = 'tab:blue', label='BEM TSR 6')
-    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[3][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    plt.plot(results_TSR_8[6], results_TSR_8[3], color = 'tab:orange', label='LLM TSR 8')
     plt.plot(r_BEM, alpha_TSR_8, linestyle = 'dashed', color = 'tab:orange', label='BEM TSR 8')
-    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[3][indeces_b1], color = 'tab:green', label='LLM TSR 10')
+    plt.plot(results_TSR_10[6], results_TSR_10[3], color = 'tab:green', label='LLM TSR 10')
     plt.plot(r_BEM, alpha_TSR_10, color = 'tab:green', linestyle = 'dashed', label='BEM TSR 10')
 
     # ax1.set_title('Alpha vs radial position')

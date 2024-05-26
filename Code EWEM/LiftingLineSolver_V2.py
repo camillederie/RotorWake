@@ -64,6 +64,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             
             for r in rings: 
                 v_ind = np.zeros(3)
+                # for f in r['filaments'][::-1]:
                 for f in r['filaments']:
                     GAMMA = f['Gamma']
                     X1, Y1, Z1 = f['x1'],f['y1'],f['z1']	# Start point of filament
@@ -107,7 +108,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             u  = np.dot(matrix_u[i], gamma)
             v  = np.dot(matrix_v[i], gamma)
             w  = np.dot(matrix_w[i], gamma)
-            # print('u =',u)
+
             # Calculate the velocity at the control point
            
             v_rotational = np.cross(np.array([-Omega, 0, 0]), np.array(control_points[i]['coordinates']))

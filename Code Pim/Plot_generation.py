@@ -99,7 +99,7 @@ def generate_plots():
     plt.xlabel('r/R')
     plt.grid()
     plt.legend()
-    plt.show()
+    # plt.show()
 
     # Plot for Angles
     plt.figure(figsize=(8, 6))
@@ -113,7 +113,7 @@ def generate_plots():
     plt.xlabel('r/R')
     plt.grid()
     plt.legend()
-    plt.show()
+    # plt.show()
 
     # Plot for Angles of Attack
     plt.figure(figsize=(8, 6))
@@ -127,7 +127,7 @@ def generate_plots():
     plt.xlabel('r/R')
     plt.grid()
     plt.legend()
-    plt.show()
+    # plt.show()
 
     # Plot for Forces
     plt.figure(figsize=(8, 6))
@@ -141,7 +141,7 @@ def generate_plots():
     plt.xlabel('r/R')
     plt.grid()
     plt.legend()
-    plt.show()
+    # plt.show()
 
     # Plot for Tangential Forces
     plt.figure(figsize=(8, 6))
@@ -155,7 +155,7 @@ def generate_plots():
     plt.xlabel('r/R')
     plt.grid()
     plt.legend()
-    plt.show()
+    # plt.show()
 
     # Print CT and CP results
     print("CT and CP Results:")

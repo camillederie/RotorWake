@@ -169,7 +169,6 @@ class BladeGeometry:
                     filament[5] = temp1[4] * np.sin(bladeRot) + temp1[5] * np.cos(bladeRot)  # z2
 
                 filaments[:, blade * (self.n_span - 1) + idx, :] = data_arr.T * self.radius
-
         return filaments
 
     def _compute_cp(self, phase_diff=0.0):
@@ -192,7 +191,6 @@ class BladeGeometry:
             cp_iblade = np.column_stack((boundEdge, tangVect, normVect))
             # return [coord, norm, tang] x,y,z
             cp[blade * (self.n_span - 1):blade * (self.n_span - 1) + self.n_span - 1, :] = cp_iblade
-        print(cp)
         return cp
 
     def doubleRotor(self):
