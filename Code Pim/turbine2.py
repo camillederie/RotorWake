@@ -20,7 +20,7 @@ class Turbine:
         self.pitch = np.radians(2)  # [rad]
         self.Nrad = Nrad             # Number of radial elements
         self.rotation = rotation             # Number of circular elements
-        #self.r_ab = np.linspace(self.blade_start, 1, self.Nrad+1) * self.R  # linear distribution
+        # self.r_ab = np.linspace(self.blade_start, 1, self.Nrad+1) * self.R  # linear distribution
         self.r_ab = ((-np.cos(np.linspace(0, np.pi, self.Nrad+1)) + 1)/2 * (1 - self.blade_start) + self.blade_start) * self.R  # cosine distribution
         self.r_cp = (self.r_ab[1:] + self.r_ab[:-1])/2
         self.c_cp = 0.25         # quarter chord point
