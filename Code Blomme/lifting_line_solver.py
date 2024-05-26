@@ -78,7 +78,7 @@ class LiftingLineSolver:
         U = np.sum(K * R12_xx, axis=1)
         V = np.sum(K * R12_xy, axis=1)
         W = np.sum(K * R12_xz, axis=1)
-        print(x1)
+        #print(x1)
         return np.array([U, V, W])
 
     def _compute_induced_velocity(self):

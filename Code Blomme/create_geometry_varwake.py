@@ -2,9 +2,11 @@
 Class object which discretises the rotor blade(s) into bound and trailing vortex
 filaments
 """
-import numpy as np
-import matplotlib.pyplot as plt
 import sys
+
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 class BladeGeometry2:
 
@@ -169,7 +171,7 @@ class BladeGeometry2:
                     filament[5] = temp1[4] * np.sin(bladeRot) + temp1[5] * np.cos(bladeRot)  # z2
 
                 filaments[:, blade * (self.n_span - 1) + idx, :] = data_arr.T * self.radius
-
+                print('Filaments', filaments.shape)
         return filaments
 
     def _compute_cp(self, phase_diff=0.0):

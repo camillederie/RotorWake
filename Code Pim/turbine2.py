@@ -39,5 +39,5 @@ class Turbine:
 
 if __name__ == "__main__":
     print("Turbine")
-    T = Turbine(20, 2)
+    T = Turbine(10, 2)
     print(T.r_ab)

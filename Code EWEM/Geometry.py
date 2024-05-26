@@ -57,7 +57,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
     ring = []
     controlpoints = []
     bladepanels = []
-
+    TSR /= 0.8
     for krot in range(n_blades):
         angle_rotation = 2 * m.pi / n_blades * krot
         cosrot = m.cos(angle_rotation)

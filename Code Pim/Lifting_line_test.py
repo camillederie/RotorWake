@@ -34,7 +34,7 @@ def plot_cl_cd_vs_alpha(Tb, CL=C_L, CD=C_D):
     plt.title(r'$C_L$ and $C_D$ vs. $\alpha$')
     plt.grid(True)
     plt.legend()
-    # plt.show()
+    plt.show()
 
 
 def lift(Tb, alpha, chord, velocity, rho):
@@ -46,9 +46,11 @@ def drag(Tb, alpha, chord, velocity, rho):
     """Determine the sectional 2D lift force of the blade section"""
     return C_D(Tb, alpha) * 0.5  * chord * velocity ** 2
 
+
 """"
 Operational calculations
 """
+
 
 def blade_geom(Tb, blade, theta, TSR):
     """"
@@ -68,7 +70,6 @@ def blade_geom(Tb, blade, theta, TSR):
     tangential = np.dstack((np.dstack((-np.sin(beta), np.cos(beta) * sinrot)), -np.cos(beta) * cosrot))[0]
     # Define the trailing locations
     bb, aa = Tb.r_ab[1:], Tb.r_ab[:-1]
-
     a = np.dstack((np.dstack((np.zeros((Tb.Nrad)), aa)), np.zeros((Tb.Nrad))))[0]
     b = np.dstack((np.dstack((np.zeros((Tb.Nrad)), bb)), np.zeros((Tb.Nrad))))[0]
     # a = np.dstack((np.dstack((np.zeros((Tb.Nrad)), aa * cosrot)), aa * sinrot))[0]
@@ -81,7 +82,6 @@ def blade_geom(Tb, blade, theta, TSR):
     # create trailing filaments
     a_c = np.dstack((np.dstack((-a_chord * np.sin(a_beta), aa)), - a_chord * np.cos(a_beta)))[0]
     b_c = np.dstack((np.dstack((-b_chord * np.sin(b_beta), bb)), - b_chord * np.cos(b_beta)))[0]
-
     # rotate a_c and b_c
     # for point in range(Tb.Nrad):
     #     a_c[point][1] = a_c[point][1] * cosrot - a_c[point][2] * sinrot
@@ -90,7 +90,6 @@ def blade_geom(Tb, blade, theta, TSR):
     #     b_c[point][2] = b_c[point][2] * cosrot + b_c[point][1] * sinrot
     # create wake filaments
     filaments = np.array([[a_c[i], a[i], b[i], b_c[i]] for i in range(Tb.Nrad)])
-
     for i in range(len(theta) - 1):
         dx = (theta[i + 1] - theta[i]) / TSR * Tb.R
         dy = lambda radius: radius * (np.cos(-theta[i + 1]) - np.cos(-theta[i]))
@@ -121,7 +120,7 @@ def blade_geom(Tb, blade, theta, TSR):
     return cp, normal, tangential, filaments
 
 def rotor_geom(Tb, TSR):
-    # TSR/0.8
+    #TSR/0.8
     cp = np.empty((0, 3))
     normal = np.empty((0, 3))
     tangential = np.empty((0, 3))
@@ -133,14 +132,7 @@ def rotor_geom(Tb, TSR):
         normal = np.vstack((normal, blade_normal))
         tangential = np.vstack((tangential, blade_tangential))
         filaments = np.vstack((filaments, blade_filaments))
-    #store filaments to txt file (3d array)
-    #if TSR == 8:
-        #np.savetxt('filaments_pim.txt', filaments, fmt='%1.4e')
-    
-    # print dimension and lenth of filaments
-    print('filaments shape:', filaments.shape)
-    print('filaments length:', len(filaments))
-    print('filaments length 22:', len(filaments[0]))
+
     return cp, normal, tangential, filaments
 
 def velocity(U_inf, velocity, n_azim, radius, omg):
@@ -155,7 +147,6 @@ def velocity(U_inf, velocity, n_azim, radius, omg):
     v_axial = U_inf * (1 - velocity[0])  # freestream + induced
     v_tan = omg * radius + np.cross((U_inf * np.array([1, 0, 0]) + velocity), n_azim)  # tangential velocity + induced
     v_p = np.sqrt(v_axial ** 2 + v_tan ** 2)
-
     return v_axial, v_tan, v_p
 
 
@@ -223,7 +214,6 @@ def single_filament(a, b, p, core=0.0001):
     u = K * crossi
     v = K * crossj
     w = K * crossk
-
     return u, v, w
 
 
@@ -241,7 +231,6 @@ def horseshoe(p, points):
         u += u_fil
         v += v_fil
         w += w_fil
-
     return u, v, w
 
 
@@ -266,7 +255,7 @@ def Lifting_Line_Method(Tb, TSR, Uinf, omega, rho, tol=1, iterations=1200):
         plt.plot(y[bound_loc-2:bound_loc+2], z[bound_loc-2:bound_loc+2], "r")
         plt.plot(cp[blade][1], cp[blade][2], "k.")
 
-    # plt.show()
+    plt.show()
 
     # fig = plt.figure()
     # ax = fig.add_subplot(111, projection='3d')
@@ -283,7 +272,7 @@ def Lifting_Line_Method(Tb, TSR, Uinf, omega, rho, tol=1, iterations=1200):
     # ax.set_ylabel('Y')
     # ax.set_zlabel('Z')
     #
-    # # plt.show()
+    # plt.show()
 
     size = (Tb.n * Tb.Nrad, Tb.n * Tb.Nrad)
     U_matrix = np.zeros(size)
@@ -295,11 +284,10 @@ def Lifting_Line_Method(Tb, TSR, Uinf, omega, rho, tol=1, iterations=1200):
             U_matrix[icp][jring] = u
             V_matrix[icp][jring] = v
             W_matrix[icp][jring] = w
-    # save U_matrix to txt file
-    np.savetxt(f'U_matrix_{omega}_pim.txt', U_matrix, fmt='%1.4e')
+
     error = 1.0
     ConvWeight = 0.2
-
+    np.savetxt(f'U_matrix_{omega}_pim_test.txt', U_matrix, fmt='%1.4e')
     # initialize
     it = 0
     gamma_new = np.zeros(size[0])  # Setting the initial circulation to zero at each control point
@@ -323,10 +311,8 @@ def Lifting_Line_Method(Tb, TSR, Uinf, omega, rho, tol=1, iterations=1200):
 
         rad_coord = np.column_stack((-1 / radial_position, np.zeros(size[0]), np.zeros(size[0])))
         tangential_direction = np.array([np.cross(rad_coord[j], cp[j]) for j in range(size[0])])
-
         v_tan = np.array([np.dot(tangential_direction[j], v_eff[j]) for j in range(size[0])])
         v_norm = np.array([np.dot([1, 0, 0], v_eff[j]) for j in range(size[0])])
-
         inflow_angle = np.arctan(v_norm / v_tan)
         chord, twist = Tb.geometry(radial_position / Tb.R)
         AoA = twist + inflow_angle
@@ -354,11 +340,11 @@ def Lifting_Line_Method(Tb, TSR, Uinf, omega, rho, tol=1, iterations=1200):
         if it % 50 == 0:
             print(it)
 
-    return gamma_new, AoA, F_norm, F_tan, inflow_angle, a, a_prime, u , np.linalg.norm(v_eff, axis=1), v_norm, v_tan
+    return gamma_new, AoA, F_norm, F_tan, inflow_angle, a, a_prime
 
 def plots():
     T = Turbine(10, 10)
-    TSR = [6, 8, 10]
+    TSR = [6] #, 8, 10]
     U_inf = 10
     rho = 1.225
 
@@ -367,18 +353,15 @@ def plots():
     inflow_angles = []
     normal_forces = []
     tangential_forces = []
-    a_list = []
-    u_list = []
-    V_tot_mag_list = []
-    v_norm_list = []
-    v_tan_list = [] 
+
     for tsr in TSR:
         omega = U_inf * tsr / T.R
-        gamma, alpha, Normal_force, Tangential_force, phi, a, aprime, u, V_tot_mag, v_norm, v_tan = Lifting_Line_Method(Tb=T,
+        gamma, alpha, Normal_force, Tangential_force, phi, a, aprime = Lifting_Line_Method(Tb=T,
                                                                                            TSR=tsr,
                                                                                            Uinf=U_inf,
                                                                                            omega=omega,
                                                                                            rho=rho)
+
 
 
         # Normalize the results
@@ -393,11 +376,7 @@ def plots():
         inflow_angles.append(phi_degrees)
         normal_forces.append(Normal_force_normalized)
         tangential_forces.append(Tangential_force_normalized)
-        a_list.append(a)
-        u_list.append(u)
-        V_tot_mag_list.append(V_tot_mag)
-        v_norm_list.append(v_norm)
-        v_tan_list.append(v_tan)
+
     r_cp_normalized = T.r_cp / T.R
 
     # Plot circulation over blade for all TSRs
@@ -408,7 +387,7 @@ def plots():
     plt.grid()
     plt.xlabel('r/R')
     plt.ylabel('Circulation')
-    # plt.show()
+    plt.show()
 
     # Plot angle of attack over blade for all TSRs
     for i, tsr in enumerate(TSR):
@@ -418,7 +397,7 @@ def plots():
     plt.grid()
     plt.xlabel('r/R')
     plt.ylabel('Angle of Attack (degrees)')
-    # plt.show()
+    plt.show()
 
     # Plot inflow angle over blade for all TSRs
     for i, tsr in enumerate(TSR):
@@ -428,7 +407,7 @@ def plots():
     plt.grid()
     plt.xlabel('r/R')
     plt.ylabel('Inflow Angle (degrees)')
-    # plt.show()
+    plt.show()
 
     # Plot normal force over blade for all TSRs
     for i, tsr in enumerate(TSR):
@@ -438,7 +417,7 @@ def plots():
     plt.grid()
     plt.xlabel('r/R')
     plt.ylabel('Normal Force (normalized)')
-    # plt.show()
+    plt.show()
 
     # Plot tangential force over blade for all TSRs
     for i, tsr in enumerate(TSR):
@@ -448,49 +427,8 @@ def plots():
     plt.grid()
     plt.xlabel('r/R')
     plt.ylabel('Tangential Force (normalized)')
-    # plt.show()
+    plt.show()
 
-    # plot a 
-    for i, tsr in enumerate(TSR):
-        plt.plot(r_cp_normalized, a_list[i][:T.Nrad], label=f'TSR {tsr}')
-    plt.legend()
-    plt.title("Axial Induction over blade")
-    plt.grid()
-    plt.xlabel('r/R')
-    plt.ylabel('Axial Induction Factor')
-    # plt.show()
-
-    # plot u
-    for i, tsr in enumerate(TSR):
-        plt.plot(r_cp_normalized, u_list[i][:T.Nrad], label=f'TSR {tsr}')
-    plt.legend()
-    plt.title("Induction Velocity U over blade")
-    plt.grid()
-    plt.xlabel('r/R')
-    plt.ylabel('Induction Velocity U [m/s]')
-    # plt.show()
-    
-    # plot V_tot_mag
-    for i, tsr in enumerate(TSR):
-        plt.plot(r_cp_normalized, V_tot_mag_list[i][:T.Nrad], label=f'TSR {tsr}')
-    plt.legend()
-    plt.title("Total Velocity over blade")
-    plt.grid()
-    plt.xlabel('r/R')
-    plt.ylabel('Total Velocity [m/s]')
-    # plt.show()
-
-    # plot v_norm and v_tan
-    for i, tsr in enumerate(TSR):
-        plt.plot(r_cp_normalized, v_norm_list[i][:T.Nrad], label=f'TSR {tsr}')
-        plt.plot(r_cp_normalized, v_tan_list[i][:T.Nrad], label=f'TSR {tsr}')
-    plt.legend()
-    plt.title("Normal and Tangential Velocity over blade")
-    plt.grid()
-    plt.xlabel('r/R')
-    plt.ylabel('Velocity [m/s]')
-    # # plt.show()
-    
 
 if __name__ == "__main__":
     print("Lifting Line Method")

@@ -7,7 +7,7 @@ TSR_list = [6,8,10]
 v_inf = 10
 wind = [10.0,0,0]
 
-n_span = 20
+n_span = 10
 n_blades = 3
 n_rotations = 10
 n_theta = 200

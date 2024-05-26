@@ -72,8 +72,8 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             matrix_w[i].append(v_ind[2])
     print('Induced velocities calculated')
     # save U_matrix to txt file
-    np.savetxt(f'U_matrix_{Omega}_us.txt', matrix_u, fmt='%1.4e')
-    matrix_u = np.loadtxt(f'U_matrix_{Omega}_{Method}.txt')
+    #np.savetxt(f'U_matrix_{Omega}_us.txt', matrix_u, fmt='%1.4e')
+    #matrix_u = np.loadtxt(f'U_matrix_{Omega}_pim.txt')
     #print('matrix_u =',matrix_u)
     F_norm_list = np.zeros(len(control_points))
     F_tan_list = np.zeros(len(control_points))
