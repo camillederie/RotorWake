@@ -17,18 +17,18 @@ def spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations):
     # n_rotations: number of rotations for theta
 
     if Method == 'Equal':
-        r = np.linspace(R_Root_Ratio * R, R, n_span)
+        r = np.linspace(R_Root_Ratio * R, R, n_span + 1)
 
     elif Method == 'Cosine':
         middle_point = (1 - R_Root_Ratio) * R / 2
-        r = np.zeros(n_span)
+        r = np.zeros(n_span + 1)
         r[0] = R_Root_Ratio * R
         r[-1] = R
 
-        angle_ratio = np.pi / (n_span - 1)
+        angle_ratio = np.pi / (n_span)
         angle = angle_ratio
 
-        for i in range(1, n_span):
+        for i in range(1, n_span + 1):
             r[i] = R_Root_Ratio * R + middle_point * (1 - np.cos(angle))
             angle += angle_ratio
 
@@ -63,7 +63,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
         cosrot = m.cos(angle_rotation)
         sinrot = m.sin(angle_rotation)
 
-        for i in range(len(span_array) - 1):
+        for i in range(len(span_array)-1):
             r = (span_array[i] + span_array[i + 1]) / 2
             geodef = geo_blade(r / R)
             angle = geodef[1] * m.pi / 180
@@ -103,7 +103,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'x2': 0,
                 'y2': span_array[i + 1],
                 'z2': 0,
-                'Gamma': 1
+                'Gamma': 0
             }
             filaments.append(temp1)
             # Trailing filament 1
@@ -116,7 +116,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'x2': 0,
                 'y2': span_array[i],
                 'z2': 0,
-                'Gamma': 1
+                'Gamma': 0
             }
             filaments.append(temp1)
 
@@ -127,7 +127,6 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 dy = (m.cos(-theta_array[j + 1]) - m.cos(-theta_array[j])) * span_array[i]
                 dz = (m.sin(-theta_array[j + 1]) - m.sin(-theta_array[j])) * span_array[i]
                 dx = (theta_array[j + 1] - theta_array[j]) / TSR * R
-                # dx = (theta_array[j + 1] - theta_array[j]) / (TSR / ( 1 - a ))
 
                 temp1 = {
                     'x1': xt + dx,
@@ -136,7 +135,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                     'x2': xt,
                     'y2': yt,
                     'z2': zt,
-                    'Gamma': 1
+                    'Gamma': 0
                 }
                 filaments.append(temp1)
             #Trailing filament 2
@@ -149,7 +148,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 'x2': geodef[0] * m.sin(-angle),
                 'y2': span_array[i + 1],
                 'z2': -geodef[0] * m.cos(angle),
-                'Gamma': 1
+                'Gamma': 0
             }
             filaments.append(temp1)
 
@@ -160,7 +159,6 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                 dy = (m.cos(-theta_array[j + 1]) - m.cos(-theta_array[j])) * span_array[i + 1]
                 dz = (m.sin(-theta_array[j + 1]) - m.sin(-theta_array[j])) * span_array[i + 1]
                 dx = (theta_array[j + 1] - theta_array[j]) / TSR * R
-                # dx = (theta_array[j + 1] - theta_array[j]) / (TSR / ( 1 - a ))
 
                 temp1 = {
                     'x1': xt,
@@ -169,7 +167,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
                     'x2': xt + dx,
                     'y2': yt + dy,
                     'z2': zt + dz,
-                    'Gamma': 1
+                    'Gamma': 0
                 }
                 filaments.append(temp1)
 
@@ -224,5 +222,7 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
             ]
 
             bladepanels.append(temp1)
-    
+        #store filaments to txt file
+    if TSR == 8:
+        np.savetxt("filaments_louis", ring, fmt="%s")
     return {'controlpoints': controlpoints, 'rings': ring, 'bladepanels': bladepanels}

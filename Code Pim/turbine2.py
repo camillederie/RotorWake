@@ -7,7 +7,7 @@ matplotlib.use('TkAgg')
 
 class Turbine:
 
-    def __init__(self, Nrad=20, rotation=1/2):
+    def __init__(self, Nrad=20, rotation=2):
         """
         All the properties of the turbine are listed here. This can all be accessed by the following method:
         from turbine import Turb
@@ -39,5 +39,5 @@ class Turbine:
 
 if __name__ == "__main__":
     print("Turbine")
-    T = Turbine(9, 9)
+    T = Turbine(20, 2)
     print(T.r_ab)
