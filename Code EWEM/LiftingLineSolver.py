@@ -97,7 +97,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
 
     for iter in range(n_iterations):
         gamma = gamma_updated.copy()    
-        print('iter =',iter)
+        # print('iter =',iter)
         for i in range(len(control_points)):
     
             pos_radial = np.linalg.norm(control_points[i]['coordinates'])
@@ -132,9 +132,9 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
             #     print ('v_azim_test =',v_azim_test)
             v_axial = np.dot([1, 0, 0], v_total)
 
-            if i == 10 and iter == 100:
-                print ('v_tot 1 =',np.sqrt(v_azim**2 + v_axial**2))
-                print ('v_tot 2',np.linalg.norm(v_total))
+            # if i == 10 and iter == 100:
+            #     print ('v_tot 1 =',np.sqrt(v_azim**2 + v_axial**2))
+            #     print ('v_tot 2',np.linalg.norm(v_total))
                 
             
             # if (np.linalg.norm(v_total) - np.sqrt(v_azim**2 + v_axial**2)) > 0.01:
@@ -178,7 +178,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # plt.title('Convergence of the Lifting Line Solver')
     # plt.show()
 
-    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list, gamma_nondim, ctan_list, cnormal_list, V_azim_list, u_list, v_total_mag_list, v_axial_list, v_azim_list]
+    return [F_norm_list, F_tan_list, gamma_updated, alpha_list, phi_list, pos_radial_list, r_R_list, a_list, a_line_list, gamma_nondim, ctan_list, cnormal_list, V_azim_list, u_list, v_total_mag_list, v_axial_list, v_azim_list, error_list, iter_list]
 
 
 def calculate_results(system_geom, V_inf, Omega, R):
@@ -203,10 +203,10 @@ def calculate_results(system_geom, V_inf, Omega, R):
     for i in range(len(indeces_b1)-1):
         dr = results[5][i+1]- results[5][i]
         T_B1_test += results[0][i]*dr
-    print('T_B1_test =',T_B1_test)
+    # print('T_B1_test =',T_B1_test)
     # Calculate the total results on the blade
     T_B1 = np.trapz(results[0][indeces_b1], results[5][indeces_b1])
-    print('T_B1 =',T_B1)
+    # print('T_B1 =',T_B1)
     T_B2 = np.trapz(results[0][indeces_b2], results[5][indeces_b2])
     T_B3 = np.trapz(results[0][indeces_b3], results[5][indeces_b3]) 
     T = T_B1 + T_B2 + T_B3
@@ -218,7 +218,7 @@ def calculate_results(system_geom, V_inf, Omega, R):
     # Calculate the power and thrust coefficients
     CP = P / (0.5 * rho * V_inf**3 * np.pi * R**2)
     CT = T / (0.5 * rho * V_inf**2 * np.pi * R**2)
-    print('a = ', np.mean(results[7]))
+    # print('a = ', np.mean(results[7]))
     CP_a = 4 * np.mean(results[7]) * (1 - np.mean(results[7]))**2
     CT_a = 4 * np.mean(results[7]) * (1 - np.mean(results[7]))
     

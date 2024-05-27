@@ -9,7 +9,7 @@ from Variables import *
 # Y along the span
 # Z is tangential
 
-def spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations):
+def spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations, n_theta):
     # Function to discretize the spanwise direction of the blade
     # Method: 'Equal' or 'Cosine' for equal or cosine spacing
     # R_Root_Ratio: ratio of root radius to total radius
@@ -32,7 +32,7 @@ def spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations):
             r[i] = R_Root_Ratio * R + middle_point * (1 - np.cos(angle))
             angle += angle_ratio
 
-    theta = np.arange(0., n_rotations * 2 * m.pi, m.pi / 10)
+    theta = np.linspace(0., n_rotations * 2 * m.pi, n_theta * n_rotations)
     return r, theta
 
 def geo_blade(r_R):
@@ -44,7 +44,7 @@ def geo_blade(r_R):
     twist = -14 * (1 - r_R)
     return [chord, twist + pitch]
 
-def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
+def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades, a):
     # Function to create the rotor geometry
     # span_array: array of spanwise positions
     # R: rotor radius
@@ -52,12 +52,11 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
     # Uinf: freestream velocity
     # theta_array: array of azimuthal positions
     # n_blades: number of blades
-    a = 0.33
     filaments = []
     ring = []
     controlpoints = []
     bladepanels = []
-    TSR /= 0.8
+    TSR /= (1-a)
     for krot in range(n_blades):
         angle_rotation = 2 * m.pi / n_blades * krot
         cosrot = m.cos(angle_rotation)
@@ -222,7 +221,4 @@ def create_rotor_geometry(span_array, R, TSR, Uinf, theta_array, n_blades):
             ]
 
             bladepanels.append(temp1)
-        #store filaments to txt file
-    if TSR == 8:
-        np.savetxt("filaments_louis", ring, fmt="%s")
     return {'controlpoints': controlpoints, 'rings': ring, 'bladepanels': bladepanels}
