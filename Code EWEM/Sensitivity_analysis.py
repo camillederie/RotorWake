@@ -11,8 +11,8 @@ Omega = TSR * v_inf / R  # Rotational speed in rad/s
 r_BEM = np.linspace(0.2,1,401)
 
 def convection_speed_analysis():
+    print("Convection speed analysis")
     a_lst = [0.2, 0.25, 0.3]
-
     for a in a_lst:
         span_array, theta_array = spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations, n_theta)
         system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades, a)
@@ -51,16 +51,16 @@ def convection_speed_analysis():
 
         #Calculate Cp and Ct for the different a values and print them
         for a in a_lst:
-            results_a = results[a][0]
             print(f"a = {a}")
-            print(f"Cp: {results_a[3][indeces_b1]}")
-            print(f"Ct: {results_a[4][indeces_b1]}")
+            print(f"Cp: {results[a][5]}")
+            print(f"Ct: {results[a][6]}")
             print()
 
 def spacing_method_analysis():
+    print("spacing_method_analysis")
     for Method in ['Equal', 'Cosine']:
         span_array, theta_array = spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations, n_theta)
-        system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades)
+        system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades, a)
         results[Method] = calculate_results(system_geom, v_inf, Omega, R)
     
     # Check if both methods have been added to the results
@@ -90,14 +90,22 @@ def spacing_method_analysis():
         plt.grid()
         plt.savefig('Figures/Error_vs_iteration_spacing.png')
         plt.close()
+
+        #Calculate Cp and Ct for the different a values and print them
+        for Method in ['Equal', 'Cosine']:
+            print(f"Method = {Method}")
+            print(f"Cp: {results[Method][5]}")
+            print(f"Ct: {results[Method][6]}")
+            print()
     else:
         print("Error: One or both methods did not produce results.")
 
 def segments_rotation_analysis():
+    print("Segments and rotation analysis")
     segments = [5, 10, 30]
     for n_theta in segments:
         span_array, theta_array = spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations, n_theta)
-        system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades)
+        system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades, a)
         results[n_theta] = calculate_results(system_geom, v_inf, Omega, R)
 
     # Check if all n_theta values have been added to the results
@@ -132,20 +140,20 @@ def segments_rotation_analysis():
 
         #Calculate Cp and Ct for the different a values and print them
         for n_theta in segments:
-            results_n_theta = results[n_theta][0]
             print(f"n_theta = {n_theta}")
-            print(f"Cp: {results_n_theta[3][indeces_b1]}")
-            print(f"Ct: {results_n_theta[4][indeces_b1]}")
+            print(f"Cp: {results[n_theta][5]}")
+            print(f"Ct: {results[n_theta][6]}")
             print()
 
     else:
         print("Error: One or more n_theta values did not produce results.")
 
 def wake_length_analysis():
+    print("Wake length analysis")
     rotations = [2, 5, 10, 20]
     for n_rotations in rotations:
         span_array, theta_array = spanwise_discretisation(Method, R_Root_Ratio, n_span, n_rotations, n_theta)
-        system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades)
+        system_geom = create_rotor_geometry(span_array, R, TSR, v_inf, theta_array, n_blades, a)
         results[n_rotations] = calculate_results(system_geom, v_inf, Omega, R)
 
     # Check if all n_rotations values have been added to the results
@@ -183,12 +191,10 @@ def wake_length_analysis():
 
         #Calculate Cp and Ct for the different a values and print them
         for n_rotations in rotations:
-            results_n_rotations = results[n_rotations][0]
             print(f"n_rotations = {n_rotations}")
-            print(f"Cp: {results_n_rotations[3][indeces_b1]}")
-            print(f"Ct: {results_n_rotations[4][indeces_b1]}")
+            print(f"Cp: {results[n_rotations][5]}")
+            print(f"Ct: {results[n_rotations][6]}")
             print()
-
     else:
         print("Error: One or more n_rotations values did not produce results.")
         
