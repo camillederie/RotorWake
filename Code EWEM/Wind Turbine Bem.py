@@ -87,16 +87,18 @@ def BEM(TSR,pitch,r,c,twist,aoa_tab,cl_tab,cd_tab,cm_tab,Vo):
 
     Pn = 0.5 * rho * Vrel**2 * c * Cn
     Pt = 0.5 * rho * Vrel**2 * c * Ct
+    Gamma = 0.5 * Vrel * c * Cl
+    Gamma_nondim = Gamma * (B* omega) / (Vo**2 * np.pi)
     print('V_rel = ', Vrel)
     if (m.isnan(Pt)|(m.isnan(Pn))):
         Pt, Pn = 0,0
 
-    return Pn, Pt, flowAngle, localalpha, a, aprime
+    return Pn, Pt, flowAngle, localalpha, a, aprime, Vrel, Gamma_nondim
 
 def single_BEM_loop(TSR,i):
     omega = TSR*Vo/R
     for k in range(len(r)):
-        Pn, Pt, flowAngle, localalpha, a, aprime = BEM(TSR,pitch,r[k],chord[k],twist[k],aoa_tab,cl_tab,cd_tab,cm_tab,Vo)
+        Pn, Pt, flowAngle, localalpha, a, aprime, Vrel, Gamma = BEM(TSR,pitch,r[k],chord[k],twist[k],aoa_tab,cl_tab,cd_tab,cm_tab,Vo)
         # print(r[k], Pn)
         Pn_lst[k] = Pn
         Pt_lst[k] = Pt
@@ -104,7 +106,8 @@ def single_BEM_loop(TSR,i):
         localalpha_lst[k,i] = localalpha
         axialInduction_lst[k,i] = a
         azimuthalInduction_lst[k,i] = aprime
-
+        Vrel_lst[k,i] = Vrel
+        gamma_lst[k,i] = Gamma
     T = np.trapz(Pn_lst, r) * B
     P = np.trapz(Pt_lst * r, r) * omega * B
 
@@ -112,7 +115,7 @@ def single_BEM_loop(TSR,i):
     Ct = T/(0.5*rho*Vo**2*m.pi*R**2)
     
 
-    return P, T, Cp, Ct, flowAngle_lst, localalpha_lst, a, aprime
+    return P, T, Cp, Ct, flowAngle_lst, localalpha_lst, a, aprime, Vrel_lst
 #Constants______________
 
 R = 50 #m
@@ -121,7 +124,7 @@ B = 3
 rho = 1.225 #kg/m3
 Vo = 10 #m/s
 
-TSR = [6,8,10]
+TSR =[8] #[6,8,10]
 
 
 pitch = -2
@@ -137,11 +140,16 @@ flowAngle_lst = np.zeros([len(r),len(TSR)])
 localalpha_lst = np.zeros([len(r),len(TSR)])
 axialInduction_lst = np.zeros([len(r),len(TSR)])
 azimuthalInduction_lst = np.zeros([len(r),len(TSR)])
+Vrel_lst = np.zeros([len(r),len(TSR)])
+gamma_lst = np.zeros([len(r),len(TSR)])
 
 for i in range(len(TSR)):
-    P, T, Cp, Ct, flowAngle_lst, localalpha_lst, a, aprime = single_BEM_loop(TSR[i],i)
+    P, T, Cp, Ct, flowAngle_lst, localalpha_lst, a, aprime, Vrel_lst = single_BEM_loop(TSR[i],i)
     plots(i)
-
+# save vrel_lst to a txt file
+np.savetxt('vrel_lst.txt', Vrel_lst, delimiter=',')
+# save gamma_lst to a txt file
+np.savetxt('gamma_lst.txt', gamma_lst, delimiter=',')
 plt.show()
 
 # %%
