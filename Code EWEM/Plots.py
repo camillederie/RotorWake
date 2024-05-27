@@ -45,15 +45,15 @@ def plot_blade_geometry(system_geom):
             ax.plot([x1, x2], [y1, y2], [z1, z2], color='blue', linewidth=0.5)  # Make the lines thinner
 
     # Plot blade panels
-    # for panel in bladepanels:
-    #     p1 = panel['p1']
-    #     p2 = panel['p2']
-    #     p3 = panel['p3']
-    #     p4 = panel['p4']
-    #     xs = [p1[0], p2[0], p3[0], p4[0], p1[0]]
-    #     ys = [p1[1], p2[1], p3[1], p4[1], p1[1]]
-    #     zs = [p1[2], p2[2], p3[2], p4[2], p1[2]]
-    #     ax.plot(xs, ys, zs, color='green', linewidth=0.5)  # Make the lines thinner
+    for panel in bladepanels:
+        p1 = panel['p1']
+        p2 = panel['p2']
+        p3 = panel['p3']
+        p4 = panel['p4']
+        xs = [p1[0], p2[0], p3[0], p4[0], p1[0]]
+        ys = [p1[1], p2[1], p3[1], p4[1], p1[1]]
+        zs = [p1[2], p2[2], p3[2], p4[2], p1[2]]
+        ax.plot(xs, ys, zs, color='green', linewidth=0.5)  # Make the lines thinner
 
     # Set labels and title
     ax.set_xlabel('X')
@@ -85,7 +85,7 @@ def plot_results(results):
     plt.legend()
     plt.grid()
     # plt.axis('square')
-    plt.savefig('Gamma_vs_radial_position.png')
+    plt.savefig('Figures/Gamma_vs_radial_position.png')
     plt.close()
 
     # Plot 2: Alpha vs radial position
@@ -104,7 +104,7 @@ def plot_results(results):
     plt.legend()
     plt.grid()
     # ax1.axis('square')
-    plt.savefig('Alpha_vs_radial_position.png')
+    plt.savefig('Figures/Alpha_vs_radial_position.png')
     plt.close()
 
     # Plot 3: Phi vs radial position
@@ -121,7 +121,7 @@ def plot_results(results):
     plt.ylabel('Phi [deg]')
     plt.legend()
     plt.grid()
-    plt.savefig('Phi_vs_radial_position.png')
+    plt.savefig('Figures/Phi_vs_radial_position.png')
     plt.close()
 
     # Plot 4: Induction factor vs radial position
@@ -138,8 +138,8 @@ def plot_results(results):
     plt.ylabel('Induction factor [-]')
     plt.legend()
     plt.grid()
-    plt.savefig('Axial_Induction_factor_vs_radial_position.png')
-    #plt.close()
+    plt.savefig('Figures/Axial_Induction_factor_vs_radial_position.png')
+    plt.close()
 
     ap_TSR_6, ap_TSR_8, ap_TSR_10 = read_array_from_file('Arrays/Azimuthal_no_Prandtl.txt')
     plt.figure()
@@ -154,7 +154,8 @@ def plot_results(results):
     plt.ylabel('Azimuthal Induction factor [-]')
     plt.legend()
     plt.grid()
-    plt.savefig('Azimuthal_Induction_factor_vs_radial_position.png')
+    plt.savefig('Figures/Azimuthal_Induction_factor_vs_radial_position.png')
+    plt.close()
 
     # Plot 5: Normal load coefficient vs radial position
     plt.figure()
@@ -166,7 +167,8 @@ def plot_results(results):
     plt.ylabel('Normal load coefficient')
     plt.legend()
     plt.grid()
-    plt.savefig('Normal_load_coefficient_vs_radial_position.png')
+    plt.savefig('Figures/Normal_load_coefficient_vs_radial_position.png')
+    plt.close()
 
     # Plot 6: Tangential load coefficient vs radial position
     plt.figure()
@@ -178,7 +180,8 @@ def plot_results(results):
     plt.ylabel('Tangential load coefficient')
     plt.legend()
     plt.grid()
-    plt.savefig('Tangential_load_coefficient_vs_radial_position.png')
+    plt.savefig('Figures/Tangential_load_coefficient_vs_radial_position.png')
+    plt.close()
 
     # Plot 7: Induction velocity U vs radial position
     plt.figure(figsize=(10, 10))
@@ -190,8 +193,8 @@ def plot_results(results):
     plt.ylabel('Induction velocity U')
     plt.legend()
     plt.grid()
-    plt.savefig('Induction_velocity_U_vs_radial_position.png')
-    
+    plt.savefig('Figures/Induction_velocity_U_vs_radial_position.png')
+    plt.close()
     # Plot 8: V_ototal _mag vs radial position
 
     plt.figure(figsize=(5, 5))
@@ -203,7 +206,8 @@ def plot_results(results):
     plt.ylabel('V_total_mag')
     plt.legend()
     plt.grid()
-    plt.savefig('V_total_mag_vs_radial_position.png')
+    plt.savefig('FiguresV_total_mag_vs_radial_position.png')
+    plt.close()
 
     # Plot 9: V_axial and V_azim vs radial position
     plt.figure(figsize=(5, 5))
@@ -218,7 +222,7 @@ def plot_results(results):
     plt.ylabel('V_axial and V_azim')
     plt.legend()
     plt.grid()
-    plt.savefig('V_axial_and_V_azim_vs_radial_position.png')
-
+    plt.savefig('Figures/V_axial_and_V_azim_vs_radial_position.png')
+    plt.close()
 
     
