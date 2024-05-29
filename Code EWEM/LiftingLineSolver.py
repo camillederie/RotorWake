@@ -12,7 +12,7 @@ def LiftingLineSolver(system_geom, V_inf, Omega, R):
     # Inputs
     relax = 0.1
     n_iterations = 700 # 1200
-    error_limit = 0.001
+    error_limit = 1e-6
     
     # system_geom: Contains the geometry of horseshoe vortex rings and control points at the blade
 
