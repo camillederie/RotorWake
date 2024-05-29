@@ -1,7 +1,8 @@
 import matplotlib.pyplot as plt
+import numpy as np
 #from Main import system_geom
 from Variables import *
-import numpy as np
+
 
 def read_array_from_file(filename):
     #For every TSR, read the results from the file consisting of 3 collumns (one for TSR 6, 8 and 10) comma delimited, and return the results as a list of lists
@@ -75,10 +76,14 @@ def plot_results(results):
     # print(results_TSR_6)
     indeces_b1 = results[f"TSR_{TSR_list[0]}"][7]
     # Plot 1: Gamma vs radial position
+    gamma_TSR_6, gamma_TSR_8, gamma_TSR_10 = read_array_from_file('Arrays/gamma_lst.txt')
     plt.figure()
-    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[9][indeces_b1], label='TSR 6')
-    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[9][indeces_b1], label='TSR 8')
-    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[9][indeces_b1], label='TSR 10')
+    plt.plot(results_TSR_6[6][indeces_b1], results_TSR_6[9][indeces_b1], color = 'tab:blue', label='LLM TSR 6')
+    plt.plot(r_BEM, gamma_TSR_6, linestyle = 'dashed', color = 'tab:blue',  label='BEM TSR 6')
+    plt.plot(results_TSR_8[6][indeces_b1], results_TSR_8[9][indeces_b1], color = 'tab:orange', label='LLM TSR 8')
+    plt.plot(r_BEM, gamma_TSR_8, linestyle = 'dashed',  color = 'tab:orange',label='BEM TSR 8')
+    plt.plot(results_TSR_10[6][indeces_b1], results_TSR_10[9][indeces_b1], color = 'tab:green', label='LLM TSR 10')
+    plt.plot(r_BEM, gamma_TSR_10, linestyle = 'dashed', color = 'tab:green', label='BEM TSR 10')
     # plt.title('Gamma vs radial position')
     plt.xlabel('Radial position [-]')
     plt.ylabel('Gamma [-]')
@@ -86,6 +91,7 @@ def plot_results(results):
     plt.grid()
     # plt.axis('square')
     plt.savefig('Figures/Gamma_vs_radial_position.png')
+    print('Plot gamma saved')
     plt.close()
 
     # Plot 2: Alpha vs radial position

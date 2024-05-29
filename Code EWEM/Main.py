@@ -1,4 +1,5 @@
 import math as m
+
 import numpy as np
 from Geometry import create_rotor_geometry, geo_blade, spanwise_discretisation
 from LiftingLineSolver import *
